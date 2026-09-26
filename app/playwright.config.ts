@@ -24,7 +24,7 @@ export default defineConfig({
     },
     {
       // The static landing page in ../site
-      command: "python3 -m http.server 4173 --bind 127.0.0.1 --directory ../site",
+      command: "node ../site/serve.mjs",
       url: "http://127.0.0.1:4173",
       reuseExistingServer: !process.env.CI,
     },

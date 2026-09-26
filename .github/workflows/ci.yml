@@ -2,7 +2,6 @@ name: CI
 
 on:
   push:
-    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -65,7 +64,7 @@ jobs:
         run: npx tauri build --no-bundle
 
       - name: Real end-to-end test (Xvfb + xdotool)
-        run: e2e/run.sh src-tauri/target/release/shortcut
+        run: bash e2e/run.sh src-tauri/target/release/shortcut
 
   other-platforms:
     name: ${{ matrix.os }} — Rust tests

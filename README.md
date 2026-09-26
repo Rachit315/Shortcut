@@ -20,16 +20,24 @@ Prompts can contain variables:
 Everything stays on your computer. There's no account, no network requests and no telemetry.
 
 - 📄 Product spec: [`docs/PRD.md`](docs/PRD.md)
-- 🌐 Landing page: [`site/`](site/)
+- 🌐 Landing page: [`site/`](site/) (deployed on Vercel)
 - 💻 Desktop app: [`app/`](app/) (Tauri 2 + Rust + TypeScript)
 
 ## Download
 
 Grab the installer for your system from the [latest release](https://github.com/Rachit315/Shortcut/releases/latest):
 
-- **macOS**: `.dmg` (universal). On first launch, allow Shortcut in *System Settings → Privacy & Security → Accessibility*.
-- **Windows**: `…-setup.exe` or `.msi`. The builds aren't code-signed yet. If SmartScreen appears, choose *More info → Run anyway*.
-- **Linux**: `.deb` or `.AppImage`. Global hotkeys and pasting need an X11 session.
+| System | File |
+|---|---|
+| macOS 11+ (Apple silicon & Intel) | [`Shortcut-macos-universal.dmg`](https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-macos-universal.dmg) |
+| Windows 10/11 | [`Shortcut-windows-x64-setup.exe`](https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-windows-x64-setup.exe) · [`.msi`](https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-windows-x64.msi) |
+| Linux (Ubuntu 22.04+, X11) | [`Shortcut-linux-amd64.deb`](https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-linux-amd64.deb) · [`.AppImage`](https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-linux-amd64.AppImage) |
+
+First launch:
+
+- **macOS**: the app isn't notarized yet. Right-click it → *Open* (or *System Settings → Privacy & Security → Open Anyway*), then allow Shortcut under *Accessibility*.
+- **Windows**: the installer isn't code-signed yet. If SmartScreen appears, choose *More info → Run anyway*.
+- **Linux**: `sudo apt install ./Shortcut-linux-amd64.deb`. Global hotkeys and pasting need an X11 session.
 
 ## Develop
 
@@ -46,7 +54,7 @@ Run the app in dev mode:
 
 ```bash
 cd app
-npm ci
+npm ci                     # also generates the app icons from design/icon.svg
 npm run tauri dev          # run the app with hot reload
 ```
 
@@ -59,7 +67,7 @@ cd app
 npm test                   # Vitest: key handling, search ranking, template preview
 npm run test:rust          # cargo test: templates, hotkeys, triggers, database, import/export
 npx playwright test        # UI flows (mocked backend) + landing page
-npx tauri build --no-bundle && npm run e2e:desktop   # real end-to-end test (Linux, needs Xvfb, xdotool, xclip, python3-tk)
+npx tauri build --no-bundle && bash e2e/run.sh     # real end-to-end test (Linux, needs Xvfb, xdotool, xclip, python3-tk)
 ```
 
 The end-to-end test starts the real binary on a virtual X display. It then presses hotkeys, types triggers and uses the palette with `xdotool`, and checks what lands in a separate text-editor window. It covers:
@@ -79,16 +87,16 @@ CI runs all of the above on every push (see `.github/workflows/ci.yml`).
 
 ## Release
 
-```bash
-# bump "version" in app/src-tauri/tauri.conf.json and app/src-tauri/Cargo.toml, then:
-git tag v0.1.0 && git push origin v0.1.0
-```
+1. Bump `version` in `app/src-tauri/tauri.conf.json` and `app/src-tauri/Cargo.toml`.
+2. Run the **Release** workflow from the Actions tab (or push a tag such as `v0.2.0`).
 
-`.github/workflows/release.yml` builds macOS (universal), Windows and Linux installers and publishes them to GitHub Releases. The landing page reads the latest release from the GitHub API, so its download buttons update automatically.
+`.github/workflows/release.yml` builds macOS (universal), Windows and Linux installers. Only after all three succeed does it publish a GitHub release with stable file names (`Shortcut-macos-universal.dmg`, …), so `releases/latest/download/<name>` always points at the newest build.
 
 ## Landing page
 
-`site/` is a static page with no build step. `.github/workflows/pages.yml` deploys it to GitHub Pages on every push to `main`. To enable it, go to *Settings → Pages → Source* and choose **GitHub Actions**. Any static host (Vercel, Netlify, Cloudflare Pages) also works: point it at `site/`. If you fork the project, change the repository in `site/assets/config.js`.
+`site/` is a static page with no build step, deployed on Vercel. `site/vercel.json` maps `/download/macos`, `/download/windows`, `/download/windows-msi`, `/download/linux-deb` and `/download/linux-appimage` to the latest release assets. That means the download buttons work without JavaScript and never go stale.
+
+To deploy it yourself, import the repo in Vercel and set **Root Directory** to `site`, with no build command. Or run `npx vercel deploy site --prod`. `node site/serve.mjs` serves the same thing locally, redirects included. If you fork the project, change the repository in `site/vercel.json` and `site/assets/config.js`.
 
 ## Project layout
 

@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml --lib",
-    "e2e:desktop": "e2e/run.sh"
+    "e2e:desktop": "e2e/run.sh",
+    "icons": "tauri icon ../design/icon.svg -o src-tauri/icons",
+    "postinstall": "tauri icon ../design/icon.svg -o src-tauri/icons"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
@@ -22,8 +24,8 @@
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",
+    "@fontsource/inter-tight": "^5.3.0",
     "@fontsource/jetbrains-mono": "^5.3.0",
-    "@fontsource/playfair-display": "^5.3.0",
     "@tauri-apps/api": "^2.11.1",
     "@tauri-apps/plugin-autostart": "^2.5.1",
     "@tauri-apps/plugin-dialog": "^2.7.3"

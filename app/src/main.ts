@@ -327,7 +327,7 @@ function renderListItems() {
     );
     return;
   }
-  for (const p of items) {
+  items.forEach((p, index) => {
     const selected = p.id === S.selectedId;
     const err = S.ctx.status.hotkey_errors[p.id];
     ul.append(
@@ -350,6 +350,7 @@ function renderListItems() {
         h(
           "div",
           { class: "prompt-item-top" },
+          h("span", { class: "prompt-num", "aria-hidden": "true" }, `(${String(index + 1).padStart(3, "0")})`),
           h("span", { class: "prompt-item-title" }, p.title),
           p.favorite ? h("span", { class: "fav", "aria-label": "Favourite" }, icon("star", 13)) : null,
         ),
@@ -364,7 +365,7 @@ function renderListItems() {
           : null,
       ),
     );
-  }
+  });
 }
 
 async function selectPrompt(id: string | null) {

@@ -93,6 +93,7 @@ function paintResults() {
         },
         onclick: () => void choose(false),
       },
+      h("span", { class: "palette-num", "aria-hidden": "true" }, `(${String(i + 1).padStart(3, "0")})`),
       h(
         "div",
         { class: "palette-item-main" },

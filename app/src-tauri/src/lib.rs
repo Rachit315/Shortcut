@@ -13,7 +13,11 @@ pub mod triggers;
 use engine::{AppState, PaletteMode};
 use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
-use tauri::{AppHandle, Manager, RunEvent, WebviewUrl, WebviewWindowBuilder, WindowEvent};
+use tauri::window::Color;
+use tauri::{AppHandle, Manager, RunEvent, Theme, WebviewUrl, WebviewWindowBuilder, WindowEvent};
+
+/// Matches the UI's background token so windows never flash white while loading.
+const BACKGROUND: Color = Color(10, 10, 10, 255);
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_global_shortcut::ShortcutState;
 
@@ -22,6 +26,8 @@ fn build_windows(app: &AppHandle) -> tauri::Result<()> {
         .title("Shortcut")
         .inner_size(1120.0, 740.0)
         .min_inner_size(900.0, 600.0)
+        .theme(Some(Theme::Dark))
+        .background_color(BACKGROUND)
         .visible(false)
         .center()
         .build()?;
@@ -33,6 +39,8 @@ fn build_windows(app: &AppHandle) -> tauri::Result<()> {
         .always_on_top(true)
         .skip_taskbar(true)
         .visible_on_all_workspaces(true)
+        .theme(Some(Theme::Dark))
+        .background_color(BACKGROUND)
         .visible(false)
         .build()?;
     Ok(())

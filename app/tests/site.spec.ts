@@ -1,16 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const SITE = "http://127.0.0.1:4173/";
-const release = {
-  tag_name: "v0.1.0",
-  assets: [
-    { name: "Shortcut_0.1.0_universal.dmg", size: 9_000_000, browser_download_url: "https://dl.test/Shortcut_0.1.0_universal.dmg" },
-    { name: "Shortcut_0.1.0_x64-setup.exe", size: 4_000_000, browser_download_url: "https://dl.test/Shortcut_0.1.0_x64-setup.exe" },
-    { name: "Shortcut_0.1.0_x64_en-US.msi", size: 5_000_000, browser_download_url: "https://dl.test/Shortcut_0.1.0_x64_en-US.msi" },
-    { name: "Shortcut_0.1.0_amd64.deb", size: 4_000_000, browser_download_url: "https://dl.test/Shortcut_0.1.0_amd64.deb" },
-    { name: "Shortcut_0.1.0_amd64.AppImage", size: 80_000_000, browser_download_url: "https://dl.test/Shortcut_0.1.0_amd64.AppImage" },
-  ],
-};
+const LATEST = "https://github.com/Rachit315/Shortcut/releases/latest/download/";
 
 const UA = {
   macos: "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140 Safari/537.36",
@@ -18,57 +9,75 @@ const UA = {
   linux: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140 Safari/537.36",
 };
 
-async function open(page: Page, api: "ok" | "fail" = "ok") {
+async function open(page: Page) {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   // Keep tests hermetic: no real network.
   await page.route("https://fonts.googleapis.com/**", (r) => r.fulfill({ body: "", contentType: "text/css" }));
-  await page.route("https://api.github.com/**", (r) => (api === "ok" ? r.fulfill({ json: release }) : r.fulfill({ status: 404, json: { message: "Not Found" } })));
+  await page.route("https://api.github.com/**", (r) => r.fulfill({ json: { tag_name: "v0.1.0", assets: [] } }));
   await page.goto(SITE);
   return errors;
 }
 
 test.describe("landing page", () => {
-  for (const [os, ext, label] of [["macos", "dmg", "macOS"], ["windows", "setup.exe", "Windows"], ["linux", "deb", "Linux"]] as const) {
-    test(`${label} visitors get a direct ${ext} download`, async ({ browser }) => {
+  for (const [os, path, label] of [
+    ["macos", "/download/macos", "macOS"],
+    ["windows", "/download/windows", "Windows"],
+    ["linux", "/download/linux-deb", "Linux"],
+  ] as const) {
+    test(`${label} visitors get a one-click download`, async ({ browser }) => {
       const ctx = await browser.newContext({ userAgent: UA[os] });
       const page = await ctx.newPage();
       const errors = await open(page);
       const primary = page.locator("a[data-primary-download]").first();
-      await expect(primary).toHaveText(new RegExp(`Download for ${label}`));
-      await expect(primary).toHaveAttribute("href", new RegExp(`${ext.replace(".", "\\.")}$`));
+      await expect(primary).toHaveText(new RegExp(`Download for ${label}`, "i"));
+      await expect(primary).toHaveAttribute("href", path);
       await expect(page.locator(`.dl[data-os="${os}"]`)).toHaveClass(/detected/);
-      await expect(page.locator("[data-version]")).toHaveText("· v0.1.0");
+      await expect(page.locator("[data-version]")).toHaveText("LATEST V0.1.0");
       expect(errors).toEqual([]);
       await ctx.close();
     });
   }
 
-  test("every platform card links to its asset", async ({ page }) => {
-    await open(page);
-    await expect(page.locator('[data-asset="dmg"]')).toHaveAttribute("href", /universal\.dmg$/);
-    await expect(page.locator('[data-asset="exe"]')).toHaveAttribute("href", /setup\.exe$/);
-    await expect(page.locator('[data-asset="msi"]')).toHaveAttribute("href", /\.msi$/);
-    await expect(page.locator('[data-asset="deb"]')).toHaveAttribute("href", /\.deb$/);
-    await expect(page.locator('[data-asset="appimage"]')).toHaveAttribute("href", /\.AppImage$/);
+  test("download paths redirect to stable release assets", async ({ request }) => {
+    const expected: Record<string, string> = {
+      "/download/macos": "Shortcut-macos-universal.dmg",
+      "/download/windows": "Shortcut-windows-x64-setup.exe",
+      "/download/windows-msi": "Shortcut-windows-x64.msi",
+      "/download/linux-deb": "Shortcut-linux-amd64.deb",
+      "/download/linux-appimage": "Shortcut-linux-amd64.AppImage",
+    };
+    for (const [path, asset] of Object.entries(expected)) {
+      const res = await request.get(new URL(path, SITE).toString(), { maxRedirects: 0 });
+      expect(res.status(), path).toBe(307);
+      expect(res.headers()["location"], path).toBe(LATEST + asset);
+    }
   });
 
-  test("falls back to the releases page when there is no release yet", async ({ page }) => {
-    const errors = await open(page, "fail");
-    await expect(page.locator('[data-asset="dmg"]')).toHaveAttribute("href", "https://github.com/Rachit315/Shortcut/releases/latest");
-    await expect(page.locator("a[data-primary-download]").first()).toHaveAttribute("href", "#download");
-    expect(errors).toEqual([]);
+  test("every platform card links to a download path", async ({ page }) => {
+    await open(page);
+    await expect(page.locator('[data-asset="dmg"]')).toHaveAttribute("href", "/download/macos");
+    await expect(page.locator('[data-asset="exe"]')).toHaveAttribute("href", "/download/windows");
+    await expect(page.locator('[data-asset="msi"]')).toHaveAttribute("href", "/download/windows-msi");
+    await expect(page.locator('[data-asset="deb"]')).toHaveAttribute("href", "/download/linux-deb");
+    await expect(page.locator('[data-asset="appimage"]')).toHaveAttribute("href", "/download/linux-appimage");
   });
 
-  test("hero, sections and FAQ render", async ({ page }) => {
-    await open(page);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("one keystroke away.");
-    for (const name of ["Pick the one your hands already know.", "Set it up once. Use it all day.", "Your prompts never leave your computer.", "Free for Windows, macOS and Linux.", "Questions, answered."]) {
+  test("hero, sections, feature rows and FAQ work", async ({ page }) => {
+    const errors = await open(page);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("keystroke away");
+    for (const name of ["Features.", "Get Shortcut.", "Your questions, answered."]) {
       await expect(page.getByRole("heading", { name })).toBeAttached();
     }
+    // Feature rows toggle open/closed.
+    const second = page.getByRole("button", { name: "Show example: Text triggers" });
+    await expect(second).toHaveAttribute("aria-expanded", "false");
+    await second.click();
+    await expect(second).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator(".row.open")).toHaveCount(2);
     await page.getByText("Does it work in the terminal?").click();
     await expect(page.getByText("set the paste keystroke to")).toBeVisible();
-    await expect(page.locator("canvas.dither").first()).toBeAttached();
+    expect(errors).toEqual([]);
   });
 
   test("no horizontal scrolling on a phone", async ({ browser }) => {
