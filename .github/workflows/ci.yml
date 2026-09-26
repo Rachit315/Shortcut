@@ -29,8 +29,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: app/package-lock.json
 
       - uses: dtolnay/rust-toolchain@stable
 
@@ -38,7 +36,7 @@ jobs:
         with:
           workspaces: app/src-tauri
 
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
 
       - name: Design tokens are in sync
         working-directory: .
@@ -81,12 +79,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: app/package-lock.json
       - uses: dtolnay/rust-toolchain@stable
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: app/src-tauri
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npm run build
       - run: cargo test --manifest-path src-tauri/Cargo.toml --lib
