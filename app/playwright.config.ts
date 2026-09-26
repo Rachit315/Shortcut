@@ -15,10 +15,18 @@ export default defineConfig({
     launchOptions: existsSync(local) ? { executablePath: local } : {},
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"], viewport: { width: 1200, height: 780 } } }],
-  webServer: {
-    command: "npm run build && npm run preview",
-    url: "http://127.0.0.1:1420",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  webServer: [
+    {
+      command: "npm run build && npm run preview",
+      url: "http://127.0.0.1:1420",
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+    },
+    {
+      // The static landing page in ../site
+      command: "python3 -m http.server 4173 --bind 127.0.0.1 --directory ../site",
+      url: "http://127.0.0.1:4173",
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
 });

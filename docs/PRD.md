@@ -122,7 +122,7 @@ Priorities: **P0** = MVP blocker, **P1** = MVP if time allows, **P2** = later ph
 | TT-2 | Expand when the typed sequence ends with the trigger. | P0 | The trigger text is erased with backspaces, then the prompt is pasted. |
 | TT-3 | Reset the typing buffer on navigation. | P0 | Enter, Tab, Esc, arrow keys, mouse clicks and modifier chords clear the buffer, so no stale matches occur. |
 | TT-4 | Ignore Shortcut's own injected keystrokes. | P0 | No recursive expansion. |
-| TT-5 | Global on/off switch. | P0 | Settings → "Text triggers" disables the keyboard listener entirely. |
+| TT-5 | Global on/off switch. | P0 | Settings → "Text triggers" stops all keystroke processing immediately; the OS keyboard listener is never started while triggers are off. |
 | TT-6 | Prefix-conflict detection. | P1 | Warn when one trigger is a suffix of another (`;p` vs `;push`). |
 
 ### 4.4 Quick palette
@@ -200,7 +200,7 @@ Priorities: **P0** = MVP blocker, **P1** = MVP if time allows, **P2** = later ph
 |---|---|
 | **Performance** | Trigger→paste p95 < 150 ms (clipboard mode). Palette open < 100 ms. Cold start < 1.5 s. Library search < 50 ms at 1,000 prompts. |
 | **Footprint** | Installer < 15 MB. Idle RAM < 120 MB with the main window hidden. Idle CPU ≈ 0 % (event-driven, no polling). |
-| **Privacy** | All data is stored in a local SQLite file in the OS app-data directory. No network requests in the MVP. No telemetry. The keyboard listener keeps only the last 64 typed characters in memory and never writes keystrokes to disk or logs. |
+| **Privacy** | All data is stored in a local SQLite file in the OS app-data directory. No network requests in the MVP. No telemetry. The keyboard listener keeps only the last 64 typed characters in memory and never writes keystrokes to disk or logs; it is not started at all while text triggers are disabled. |
 | **Security** | Tauri capability allow-list: the UI can only call Shortcut's own commands. CSP blocks remote scripts. Import files are parsed with strict schema validation and size limits (10 MB). Release binaries are code-signed (macOS notarised, Windows Authenticode) once certificates are available. |
 | **Reliability** | The SQLite database uses WAL mode with a schema migration table. Crash-safe writes. The clipboard is always restored, even if injection fails. |
 | **Accessibility** | Full keyboard operation of every screen. Visible focus rings. WCAG AA contrast (text `#111827` on `#FFFFFF`, primary `#3B82F6` used for large text/controls only, with `#1D4ED8` for small text). Respects `prefers-reduced-motion`. Screen-reader labels on icon buttons. |

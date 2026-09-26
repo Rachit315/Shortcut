@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shortcut — Paste your best AI prompts with one keystroke</title>
+    <meta
+      name="description"
+      content="Shortcut is a free desktop app that saves the prompts you reuse every day and pastes them into ChatGPT, Claude, Cursor, VS Code or your terminal with a hotkey, a text trigger or a quick search."
+    />
+    <meta name="theme-color" content="#FFFFFF" />
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Shortcut — Your best prompts, one keystroke away" />
+    <meta property="og:description" content="Save the prompts you retype every day. Paste them into any app with Ctrl+Alt+1, ;push or a quick search. Free, private, open source." />
+    <meta property="og:image" content="assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/tokens.css" />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <script src="assets/config.js"></script>
+    <script type="module" src="assets/main.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="nav" id="top">
+      <div class="container nav-inner">
+        <a class="brand" href="#top" aria-label="Shortcut home">
+          <img src="assets/icon.svg" alt="" width="30" height="30" />
+          <span>Shortcut</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#features">Features</a>
+          <a href="#how">How it works</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#faq">FAQ</a>
+          <a class="gh-link" data-repo-link href="#" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+        <a class="btn btn-primary btn-small" href="#download">Download</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ============ HERO ============ -->
+      <section class="hero" aria-labelledby="hero-title">
+        <canvas class="dither" aria-hidden="true"></canvas>
+        <div class="hero-fade" aria-hidden="true"></div>
+        <div class="container hero-inner">
+          <p class="label reveal">Prompt launcher · Free &amp; open source</p>
+          <h1 id="hero-title" class="display">
+            <span class="line"><span>Your best prompts&nbsp;—</span></span>
+            <span class="line"><span>one keystroke away.</span></span>
+          </h1>
+          <p class="lead reveal" style="--d: 2">
+            Shortcut saves the prompts you retype every day and pastes them into ChatGPT, Claude, Cursor, VS Code or your terminal.
+            Press <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>1</kbd>, type <code>;push</code>, or search them all with one hotkey.
+          </p>
+          <div class="hero-cta reveal" style="--d: 3">
+            <a class="btn btn-primary btn-large" href="#download" data-primary-download>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></svg>
+              <span data-primary-label>Download Shortcut</span>
+            </a>
+            <a class="btn btn-secondary btn-large" href="#how">See how it works</a>
+          </div>
+          <p class="micro reveal" style="--d: 4">Windows · macOS · Linux &nbsp;·&nbsp; No account &nbsp;·&nbsp; Your prompts stay on your computer</p>
+
+          <!-- Focal object: live demo of a trigger expanding -->
+          <div class="demo reveal" style="--d: 5" aria-label="Animated example: typing ;review in a chat box expands into a full code review prompt">
+            <div class="demo-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span class="demo-app label">Any app · chat box</span>
+              <span class="demo-hint label" data-demo-hint>typing</span>
+            </div>
+            <div class="demo-body">
+              <div class="demo-input" aria-hidden="true"><span data-demo-text></span><span class="caret"></span></div>
+              <div class="demo-keys" aria-hidden="true">
+                <span class="label">or press</span>
+                <kbd data-k="ctrl">Ctrl</kbd><kbd data-k="alt">Alt</kbd><kbd data-k="1">1</kbd>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ WORKS WITH ============ -->
+      <section class="works" aria-label="Works in any app">
+        <div class="container works-inner">
+          <span class="label">Works wherever you can type</span>
+          <ul class="works-list">
+            <li>ChatGPT</li><li>Claude</li><li>Cursor</li><li>VS Code</li><li>Terminal</li><li>Slack</li><li>Midjourney</li><li>Notion</li><li>Gmail</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ PROBLEM ============ -->
+      <section class="section problem" aria-labelledby="problem-title">
+        <div class="container narrow">
+          <p class="label reveal">The problem</p>
+          <h2 id="problem-title" class="h2 reveal">You wrote the perfect prompt last Tuesday. Where is it now?</h2>
+          <div class="problem-grid">
+            <div class="problem-item reveal" style="--d: 1">
+              <span class="problem-num label">01</span>
+              <h3>You retype it</h3>
+              <p>and a slightly worse version comes out every time.</p>
+            </div>
+            <div class="problem-item reveal" style="--d: 2">
+              <span class="problem-num label">02</span>
+              <h3>You dig through notes</h3>
+              <p>find it, copy it, switch back, paste it, and lose your train of thought.</p>
+            </div>
+            <div class="problem-item reveal" style="--d: 3">
+              <span class="problem-num label">03</span>
+              <h3>You lose it</h3>
+              <p>because your best prompts are buried in old chat threads you'll never scroll back to.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FEATURES ============ -->
+      <section class="section features" id="features" aria-labelledby="features-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="label reveal">Three ways to paste</p>
+            <h2 id="features-title" class="h2 reveal">Pick the one your hands already know.</h2>
+          </div>
+          <div class="feature-grid">
+            <article class="card feature reveal" style="--d: 1">
+              <div class="feature-visual visual-keys" aria-hidden="true">
+                <kbd>Ctrl</kbd><span>+</span><kbd>Alt</kbd><span>+</span><kbd class="hot">1</kbd>
+              </div>
+              <p class="label">Global hotkeys</p>
+              <h3>One key combo per prompt.</h3>
+              <p>Give your code-review prompt <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>1</kbd> and it pastes into whatever app has focus. Shortcut warns you before you take a combo your browser or OS already uses.</p>
+            </article>
+            <article class="card feature reveal" style="--d: 2">
+              <div class="feature-visual visual-trigger" aria-hidden="true">
+                <span class="typed">;push</span><span class="arrow">→</span><span class="expanded">Look at my staged changes, group them into commits…</span>
+              </div>
+              <p class="label">Text triggers</p>
+              <h3>Type a few characters. Get the whole prompt.</h3>
+              <p>Type <code>;push</code> in your terminal or <code>;review</code> in a chat box and Shortcut swaps it for the full prompt, in place.</p>
+            </article>
+            <article class="card feature reveal" style="--d: 3">
+              <div class="feature-visual visual-palette" aria-hidden="true">
+                <div class="mini-search">refu<span class="caret"></span></div>
+                <div class="mini-row active">Refund reply <span class="badge">;refund</span></div>
+                <div class="mini-row">Code review <span class="badge">Ctrl+Alt+1</span></div>
+              </div>
+              <p class="label">Quick palette</p>
+              <h3>Forgot the shortcut? Search for it.</h3>
+              <p>Press <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Space</kbd> anywhere, type a few letters, hit Enter. Focus jumps back to your app and the prompt lands where your cursor was.</p>
+            </article>
+          </div>
+
+          <div class="mini-grid">
+            <div class="mini-card reveal" style="--d: 1">
+              <h3>Fill-in variables</h3>
+              <p><code>{{subject}}</code> asks you for a value before pasting. Defaults and dropdowns included.</p>
+            </div>
+            <div class="mini-card reveal" style="--d: 2">
+              <h3>Clipboard-aware</h3>
+              <p><code>{{clipboard}}</code> drops in what you just copied, then your original clipboard is put back.</p>
+            </div>
+            <div class="mini-card reveal" style="--d: 3">
+              <h3>Cursor placement</h3>
+              <p><code>{{cursor}}</code> leaves the caret exactly where you want to keep typing.</p>
+            </div>
+            <div class="mini-card reveal" style="--d: 4">
+              <h3>Small and quiet</h3>
+              <p>A ~4 MB Linux package that sits in your tray and does nothing until you call it.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ HOW ============ -->
+      <section class="section how" id="how" aria-labelledby="how-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="label reveal">How it works</p>
+            <h2 id="how-title" class="h2 reveal">Set it up once. Use it all day.</h2>
+          </div>
+          <ol class="steps">
+            <li class="step reveal" style="--d: 1">
+              <span class="step-num">1</span>
+              <h3>Save the prompt</h3>
+              <p>Paste in the prompt you keep retyping. Five starter prompts for coding and image generation are there on day one.</p>
+            </li>
+            <li class="step reveal" style="--d: 2">
+              <span class="step-num">2</span>
+              <h3>Give it a shortcut</h3>
+              <p>Click the recorder and press a combo, or type a trigger like <code>;tests</code>. Or skip it: every prompt is in the palette.</p>
+            </li>
+            <li class="step reveal" style="--d: 3">
+              <span class="step-num">3</span>
+              <h3>Press it anywhere</h3>
+              <p>In a browser, IDE, terminal or chat app. The prompt appears at your cursor in a fraction of a second.</p>
+            </li>
+          </ol>
+
+          <div class="template reveal">
+            <div class="template-col">
+              <p class="label">What you save</p>
+              <pre class="code"><code>Write unit tests for the code below using
+<span class="tok">{{framework=pytest}}</span>. Cover edge cases.
+
+<span class="tok">{{clipboard}}</span>
+
+Focus on: <span class="tok">{{cursor}}</span></code></pre>
+            </div>
+            <div class="template-arrow" aria-hidden="true">→</div>
+            <div class="template-col">
+              <p class="label">What gets pasted</p>
+              <pre class="code out"><code>Write unit tests for the code below using
+pytest. Cover edge cases.
+
+def parse(s): return s.split(",")
+
+Focus on: <span class="caret-inline"></span></code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PRIVACY ============ -->
+      <section class="section privacy" id="privacy" aria-labelledby="privacy-title">
+        <div class="container">
+          <div class="privacy-card card reveal">
+            <div>
+              <p class="label">Privacy</p>
+              <h2 id="privacy-title" class="h2">Your prompts never leave your computer.</h2>
+              <p class="privacy-lead">An app that listens for keyboard shortcuts should earn your trust. Here is exactly what Shortcut does:</p>
+            </div>
+            <ul class="checks">
+              <li><strong>No account, no cloud.</strong> Prompts live in a local SQLite file you can open and export.</li>
+              <li><strong>No network requests. No telemetry.</strong> The app never connects to anything.</li>
+              <li><strong>A 64-character memory.</strong> To spot triggers it keeps only the last 64 typed characters in memory. Nothing is logged or saved.</li>
+              <li><strong>Off switch.</strong> Turn text triggers off, or pause everything from the tray.</li>
+              <li><strong>Open source (MIT).</strong> Read every line on GitHub.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ DOWNLOAD ============ -->
+      <section class="section download" id="download" aria-labelledby="download-title">
+        <div class="container">
+          <div class="section-head center">
+            <p class="label reveal">Download <span data-version></span></p>
+            <h2 id="download-title" class="h2 reveal">Free for Windows, macOS and Linux.</h2>
+          </div>
+          <div class="dl-grid">
+            <article class="card dl reveal" data-os="macos" style="--d: 1">
+              <h3>macOS</h3>
+              <p class="dl-meta label">macOS 11+ · Apple silicon &amp; Intel</p>
+              <a class="btn btn-primary" data-asset="dmg" href="#">Download .dmg</a>
+              <p class="dl-note">On first launch, allow Shortcut under System Settings → Privacy &amp; Security → Accessibility so it can paste for you.</p>
+            </article>
+            <article class="card dl reveal" data-os="windows" style="--d: 2">
+              <h3>Windows</h3>
+              <p class="dl-meta label">Windows 10 &amp; 11 · 64-bit</p>
+              <a class="btn btn-primary" data-asset="exe" href="#">Download installer</a>
+              <a class="dl-alt" data-asset="msi" href="#">or the .msi package</a>
+              <p class="dl-note">If SmartScreen appears, choose “More info → Run anyway”. Code signing is on the roadmap.</p>
+            </article>
+            <article class="card dl reveal" data-os="linux" style="--d: 3">
+              <h3>Linux</h3>
+              <p class="dl-meta label">X11 sessions · Ubuntu 22.04+</p>
+              <a class="btn btn-primary" data-asset="deb" href="#">Download .deb</a>
+              <a class="dl-alt" data-asset="appimage" href="#">or the .AppImage</a>
+              <p class="dl-note">Hotkeys and pasting need an X11 session. On Wayland they work in XWayland apps only.</p>
+            </article>
+          </div>
+          <p class="dl-all reveal"><a data-releases-link href="#">All releases and checksums →</a></p>
+        </div>
+      </section>
+
+      <!-- ============ FAQ ============ -->
+      <section class="section faq" id="faq" aria-labelledby="faq-title">
+        <div class="container narrow">
+          <p class="label reveal">FAQ</p>
+          <h2 id="faq-title" class="h2 reveal">Questions, answered.</h2>
+          <div class="faq-list">
+            <details class="reveal">
+              <summary>Is it really free?</summary>
+              <p>Yes. The app is free and open source under the MIT licence, with no limits on prompts, hotkeys or triggers. A paid sync add-on may come later; everything that exists today stays free.</p>
+            </details>
+            <details class="reveal">
+              <summary>Which apps does it work with?</summary>
+              <p>Any app where you can paste text: browsers (ChatGPT, Claude, Gemini), editors and IDEs (Cursor, VS Code, JetBrains), terminals, Slack, Notion and email. If an app blocks synthetic paste, switch Settings → Paste method to “Type it out”.</p>
+            </details>
+            <details class="reveal">
+              <summary>Does it work in the terminal?</summary>
+              <p>Yes. On Linux, set the paste keystroke to <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>V</kbd> in Settings, because most Linux terminals don't paste with <kbd>Ctrl</kbd><kbd>V</kbd>. Windows Terminal and macOS terminals work out of the box.</p>
+            </details>
+            <details class="reveal">
+              <summary>Why does macOS ask for Accessibility permission?</summary>
+              <p>macOS requires it for any app that presses keys for you, which is how Shortcut sends ⌘V. Text triggers may also need Input Monitoring. Shortcut walks you through both on first launch.</p>
+            </details>
+            <details class="reveal">
+              <summary>What if a hotkey is already taken?</summary>
+              <p>Shortcut blocks duplicates, warns about combos your browser or OS already uses (like <kbd>Ctrl</kbd><kbd>1</kbd> for tabs), and shows “not active” if another app has claimed the combo.</p>
+            </details>
+            <details class="reveal">
+              <summary>Can I move my prompts to another computer?</summary>
+              <p>Export everything to JSON (keeps folders, tags, hotkeys and triggers) or Markdown from Settings, then import it on the other machine.</p>
+            </details>
+            <details class="reveal">
+              <summary>Where are my prompts stored?</summary>
+              <p>In a SQLite database in your user data folder (Settings → About shows the exact path). Nothing is uploaded anywhere.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FINAL CTA ============ -->
+      <section class="final" aria-labelledby="final-title">
+        <canvas class="dither dither-final" aria-hidden="true"></canvas>
+        <div class="container final-inner">
+          <h2 id="final-title" class="display display-md reveal">Stop retyping. Start pressing.</h2>
+          <p class="lead reveal">Save your first prompt in under two minutes.</p>
+          <div class="hero-cta reveal">
+            <a class="btn btn-primary btn-large" href="#download" data-primary-download><span data-primary-label>Download Shortcut</span></a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="brand"><img src="assets/icon.svg" alt="" width="24" height="24" /><span>Shortcut</span></div>
+        <p class="footer-note">Free &amp; open source (MIT). Made for people who talk to AI all day.</p>
+        <nav class="footer-links" aria-label="Footer">
+          <a data-repo-link href="#" target="_blank" rel="noopener">GitHub</a>
+          <a data-releases-link href="#">Releases</a>
+          <a data-prd-link href="#">Product spec</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
