@@ -4,10 +4,12 @@ name: Release
 # release with *stable file names*, so https://github.com/<repo>/releases/latest/download/<name>
 # always points at the newest build (the landing page's /download/* links rely on this).
 #
-# Run it from the Actions tab ("Run workflow") or push a tag such as v0.1.0.
+# Run it from the Actions tab ("Run workflow"), push a tag such as v0.1.0, or push a commit
+# whose message contains "[release]".
 on:
   push:
     tags: ["v*"]
+    branches: ["**"]
   workflow_dispatch:
 
 permissions:
@@ -16,6 +18,7 @@ permissions:
 jobs:
   build:
     name: Build ${{ matrix.name }}
+    if: github.event_name != 'push' || startsWith(github.ref, 'refs/tags/') || contains(github.event.head_commit.message, '[release]')
     strategy:
       fail-fast: false
       matrix:
