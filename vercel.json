@@ -1,0 +1,69 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo 'Static site: nothing to install'",
+  "buildCommand": "echo 'Static site: nothing to build'",
+  "outputDirectory": "site",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/download/macos",
+      "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-macos-universal.dmg",
+      "permanent": false
+    },
+    {
+      "source": "/download/windows",
+      "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-windows-x64-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/download/windows-msi",
+      "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-windows-x64.msi",
+      "permanent": false
+    },
+    {
+      "source": "/download/linux-deb",
+      "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-linux-amd64.deb",
+      "permanent": false
+    },
+    {
+      "source": "/download/linux-appimage",
+      "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-linux-amd64.AppImage",
+      "permanent": false
+    },
+    {
+      "source": "/download",
+      "destination": "/#download",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    }
+  ]
+}

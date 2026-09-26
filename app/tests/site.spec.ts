@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
 
 const SITE = "http://127.0.0.1:4173/";
 const LATEST = "https://github.com/Rachit315/Shortcut/releases/latest/download/";
@@ -54,6 +55,16 @@ test.describe("landing page", () => {
       expect(res.status(), path).toBe(307);
       expect(res.headers()["location"], path).toBe(LATEST + asset);
     }
+  });
+
+  test("root and site vercel.json agree (deploying from repo root or from site/)", () => {
+    const read = (p: string) => JSON.parse(readFileSync(new URL(p, import.meta.url), "utf8"));
+    const root = read("../../vercel.json");
+    const site = read("../../site/vercel.json");
+    expect(root.outputDirectory).toBe("site");
+    expect(root.redirects).toEqual(site.redirects);
+    expect(root.headers).toEqual(site.headers);
+    expect(root.cleanUrls).toBe(site.cleanUrls);
   });
 
   test("every platform card links to a download path", async ({ page }) => {

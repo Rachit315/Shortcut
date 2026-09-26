@@ -94,9 +94,11 @@ CI runs all of the above on every push (see `.github/workflows/ci.yml`).
 
 ## Landing page
 
-`site/` is a static page with no build step, deployed on Vercel. `site/vercel.json` maps `/download/macos`, `/download/windows`, `/download/windows-msi`, `/download/linux-deb` and `/download/linux-appimage` to the latest release assets. That means the download buttons work without JavaScript and never go stale.
+`site/` is a static page with no build step, deployed on Vercel. Download buttons use `/download/macos`, `/download/windows`, `/download/windows-msi`, `/download/linux-deb` and `/download/linux-appimage`. Vercel redirects these to the matching assets of the latest GitHub release, so they work without JavaScript and always serve the newest build. Before the first release exists, the page says so instead of showing dead links.
 
-To deploy it yourself, import the repo in Vercel and set **Root Directory** to `site`, with no build command. Or run `npx vercel deploy site --prod`. `node site/serve.mjs` serves the same thing locally, redirects included. If you fork the project, change the repository in `site/vercel.json` and `site/assets/config.js`.
+**Deploying on Vercel:** *Add New → Project*, import this repository and click **Deploy**. Keep the default settings, because the root `vercel.json` already tells Vercel to publish `site/` with no install or build step. Or set **Root Directory** to `site`, in which case `site/vercel.json` is used. Both files hold the same redirects, and a test keeps them in sync.
+
+`node site/serve.mjs` serves the page locally with the same redirects. If you fork the project, change the repository name in both `vercel.json` files and in `site/assets/config.js`.
 
 ## Project layout
 
