@@ -1,14 +1,14 @@
 [package]
-name = "shortcut"
-version = "0.1.0"
-description = "Shortcut — your best prompts, one keystroke away"
-authors = ["Shortcut contributors"]
+name = "clazy"
+version = "0.2.0"
+description = "Clazy — your best prompts, one keystroke away"
+authors = ["Clazy contributors"]
 license = "MIT"
 edition = "2021"
 rust-version = "1.77"
 
 [lib]
-name = "shortcut_lib"
+name = "clazy_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

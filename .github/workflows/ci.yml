@@ -62,7 +62,7 @@ jobs:
         run: npx tauri build --no-bundle
 
       - name: Real end-to-end test (Xvfb + xdotool)
-        run: bash e2e/run.sh src-tauri/target/release/shortcut
+        run: bash e2e/run.sh src-tauri/target/release/clazy
 
   other-platforms:
     name: ${{ matrix.os }} — Rust tests

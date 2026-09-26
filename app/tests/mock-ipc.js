@@ -160,9 +160,9 @@
     hide_main: () => null,
     export_data: () => prompts.length,
     import_data: () => ({ prompts_added: 1, prompts_updated: 0, folders_added: 0, warnings: [] }),
-    get_app_info: () => ({ version: "0.1.0", os: opts.os, data_dir: "/home/test/.local/share/app.shortcut.desktop", session: "x11" }),
+    get_app_info: () => ({ version: "0.1.0", os: opts.os, data_dir: "/home/test/.local/share/app.clazy.desktop", session: "x11" }),
     open_accessibility_settings: () => null,
-    "plugin:dialog|save": () => "/tmp/shortcut-prompts.json",
+    "plugin:dialog|save": () => "/tmp/clazy-prompts.json",
     "plugin:dialog|open": () => "/tmp/import.json",
     "plugin:autostart|is_enabled": () => false,
   };

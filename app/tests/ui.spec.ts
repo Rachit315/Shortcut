@@ -16,22 +16,58 @@ const calls = (page: Page, cmd: string) =>
   page.evaluate((c) => (window as unknown as { __calls: { cmd: string; args: Record<string, unknown> }[] }).__calls.filter((x) => x.cmd === c), cmd);
 
 test.describe("main window", () => {
-  test("first run shows onboarding and finishes to the tray", async ({ page }) => {
+  test("first run shows the product tour and finishes to the tray", async ({ page }) => {
     const errors = await boot(page, { onboarded: false });
-    const dialog = page.getByRole("dialog", { name: "Welcome to Shortcut" });
+    const dialog = page.getByRole("dialog", { name: "Welcome to Clazy" });
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByText("Your best prompts, one keystroke away.")).toBeVisible();
-    await dialog.getByRole("button", { name: "Get started" }).click();
+    await expect(dialog.getByRole("heading", { name: "Hi, I'm Clazy." })).toBeVisible();
+    await expect(dialog.getByText("01 / 08")).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Back" })).toBeHidden();
+    await dialog.getByRole("button", { name: "Show me how" }).click();
+    for (const title of ["Save a prompt once", "Press keys, get your prompt", "Or type a short code", "Forgot which one? Search.", "Blanks that fill themselves"]) {
+      await expect(dialog.getByRole("heading", { name: title })).toBeVisible();
+      await dialog.getByRole("button", { name: "Next" }).click();
+    }
     await expect(dialog.getByText("Paste your first prompt")).toBeVisible();
+    // Back goes to the previous explanation.
+    await dialog.getByRole("button", { name: "Back" }).click();
+    await expect(dialog.getByRole("heading", { name: "Blanks that fill themselves" })).toBeVisible();
+    await dialog.getByRole("button", { name: "Next" }).click();
     // Simulate the trigger expansion landing in the practice box.
     await dialog.getByLabel("Practice area").fill("Look at my staged and unstaged changes, then push the current branch.");
     await expect(dialog.getByText("It works.")).toBeVisible();
     await dialog.getByRole("button", { name: "Continue" }).click();
-    await dialog.getByRole("button", { name: "Start using Shortcut" }).click();
+    await expect(dialog.getByText("08 / 08")).toBeVisible();
+    await dialog.getByRole("button", { name: "Start using Clazy" }).click();
     await expect(dialog).toBeHidden();
     const saved = await calls(page, "save_settings");
     expect(saved.at(-1)!.args.settings).toMatchObject({ onboarding_complete: true, launch_at_login: true });
     expect(await calls(page, "hide_main")).toHaveLength(1);
+    expect(errors).toEqual([]);
+  });
+
+  test("the tour can be skipped, and macOS gets the permission step", async ({ page }) => {
+    const errors = await boot(page, { onboarded: false, os: "macos" });
+    const dialog = page.getByRole("dialog", { name: "Welcome to Clazy" });
+    await expect(dialog.getByText("01 / 09")).toBeVisible();
+    await dialog.getByRole("button", { name: "Skip tour" }).click();
+    await expect(dialog.getByRole("heading", { name: "Let Clazy type for you" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Skip tour" })).toBeHidden();
+    expect(errors).toEqual([]);
+  });
+
+  test("the tour can be replayed from Settings without changing anything", async ({ page }) => {
+    const errors = await boot(page);
+    await page.getByRole("button", { name: "Settings" }).click();
+    await page.getByRole("button", { name: "Replay the product tour" }).click();
+    const dialog = page.getByRole("dialog", { name: "Welcome to Clazy" });
+    await expect(dialog.getByText("01 / 07")).toBeVisible();
+    await dialog.getByRole("button", { name: "Skip tour" }).click();
+    await expect(dialog.getByRole("heading", { name: "That's the tour" })).toBeVisible();
+    await dialog.getByRole("button", { name: "Finish" }).click();
+    await expect(dialog).toBeHidden();
+    expect(await calls(page, "save_settings")).toHaveLength(0);
+    expect(await calls(page, "hide_main")).toHaveLength(0);
     expect(errors).toEqual([]);
   });
 
@@ -129,7 +165,7 @@ test.describe("main window", () => {
     await expect.poll(async () => ((await calls(page, "save_settings")).at(-1)?.args.settings as { paste_keystroke?: string })?.paste_keystroke).toBe("ctrl_shift_v");
     await page.getByRole("button", { name: "Export JSON" }).click();
     await expect(page.getByText("Exported 5 prompts")).toBeVisible();
-    expect((await calls(page, "export_data"))[0].args).toEqual({ path: "/tmp/shortcut-prompts.json", format: "json" });
+    expect((await calls(page, "export_data"))[0].args).toEqual({ path: "/tmp/clazy-prompts.json", format: "json" });
     await page.getByRole("button", { name: "Import…" }).click();
     await expect(page.getByText("Imported: 1 new, 0 updated")).toBeVisible();
     expect(errors).toEqual([]);

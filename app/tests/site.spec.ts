@@ -44,11 +44,11 @@ test.describe("landing page", () => {
 
   test("download paths redirect to stable release assets", async ({ request }) => {
     const expected: Record<string, string> = {
-      "/download/macos": "Shortcut-macos-universal.dmg",
-      "/download/windows": "Shortcut-windows-x64-setup.exe",
-      "/download/windows-msi": "Shortcut-windows-x64.msi",
-      "/download/linux-deb": "Shortcut-linux-amd64.deb",
-      "/download/linux-appimage": "Shortcut-linux-amd64.AppImage",
+      "/download/macos": "Clazy-macos-universal.dmg",
+      "/download/windows": "Clazy-windows-x64-setup.exe",
+      "/download/windows-msi": "Clazy-windows-x64.msi",
+      "/download/linux-deb": "Clazy-linux-amd64.deb",
+      "/download/linux-appimage": "Clazy-linux-amd64.AppImage",
     };
     for (const [path, asset] of Object.entries(expected)) {
       const res = await request.get(new URL(path, SITE).toString(), { maxRedirects: 0 });
@@ -88,7 +88,7 @@ test.describe("landing page", () => {
   test("hero, sections, feature rows and FAQ work", async ({ page }) => {
     const errors = await open(page);
     await expect(page.getByRole("heading", { level: 1 })).toContainText("keystroke away");
-    for (const name of ["Features.", "Get Shortcut.", "Your questions, answered."]) {
+    for (const name of ["Features.", "Get Clazy.", "Your questions, answered."]) {
       await expect(page.getByRole("heading", { name })).toBeAttached();
     }
     // Feature rows toggle open/closed.
@@ -99,6 +99,19 @@ test.describe("landing page", () => {
     await expect(page.locator(".row.open")).toHaveCount(2);
     await page.getByText("Does it work in the terminal?").click();
     await expect(page.getByText("set the paste keystroke to")).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+
+  test("the demo video is embedded and served", async ({ page, request }) => {
+    const errors = await open(page);
+    const video = page.locator("video.demo-video");
+    await expect(video).toHaveAttribute("poster", "/assets/clazy-demo-poster.jpg");
+    await expect(video.locator("source")).toHaveAttribute("src", "/assets/clazy-demo.mp4");
+    for (const [path, type] of [["/assets/clazy-demo.mp4", "video/mp4"], ["/assets/clazy-demo-poster.jpg", "image/jpeg"]]) {
+      const res = await request.head(new URL(path, SITE).toString());
+      expect(res.status(), path).toBe(200);
+      expect(res.headers()["content-type"], path).toContain(type);
+    }
     expect(errors).toEqual([]);
   });
 

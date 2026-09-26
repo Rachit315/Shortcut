@@ -3,24 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Shortcut — Paste your best AI prompts with one keystroke</title>
+    <title>Clazy — Paste your best AI prompts with one keystroke</title>
     <meta
       name="description"
-      content="Shortcut is a free desktop app that saves the prompts you reuse every day and pastes them into ChatGPT, Claude, Cursor, VS Code or your terminal with a hotkey, a text trigger or a quick search."
+      content="Clazy is a free desktop app that saves the prompts you reuse every day and pastes them into ChatGPT, Claude, Cursor, VS Code or your terminal with a hotkey, a text trigger or a quick search."
     />
     <meta name="theme-color" content="#0A0A0A" />
     <meta name="color-scheme" content="dark" />
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Shortcut — Your best prompts, one keystroke away" />
+    <meta property="og:title" content="Clazy — Your best prompts, one keystroke away" />
     <meta property="og:description" content="Save the prompts you retype every day. Paste them into any app with Ctrl+Alt+1, ;push or a quick search. Free, private, open source." />
     <meta name="twitter:card" content="summary" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preload" href="/assets/fonts/geist-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/assets/tokens.css" />
     <link rel="stylesheet" href="/assets/styles.css" />
     <script src="/assets/config.js"></script>
@@ -32,11 +27,12 @@
     <!-- ================= HERO FRAME ================= -->
     <div class="frame hero-frame" id="top">
       <header class="bar">
-        <a class="brand" href="#top" aria-label="Shortcut home">
+        <a class="brand" href="#top" aria-label="Clazy home">
           <img src="/assets/icon.svg" alt="" width="26" height="26" />
-          <span>Shortcut</span>
+          <span>Clazy</span>
         </a>
         <nav class="bar-links" aria-label="Primary">
+          <a href="#demo">Demo</a>
           <a href="#where">Where</a>
           <a href="#features">Features</a>
           <a href="#how">Process</a>
@@ -55,16 +51,16 @@
             </h1>
             <p class="hero-meta mono reveal" style="--d: 2">WINDOWS · MACOS · LINUX &nbsp;/&nbsp; BUILT FOR AI POWER USERS</p>
             <p class="hero-copy mono reveal" style="--d: 3">
-              Stop retyping the same prompts. Shortcut saves them once and pastes them into ChatGPT, Claude, Cursor, VS Code or
+              Stop retyping the same prompts. Clazy saves them once and pastes them into ChatGPT, Claude, Cursor, VS Code or
               your terminal. Press <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>1</kbd>, type <code>;push</code>, or search them all.
             </p>
             <div class="split reveal" style="--d: 4">
-              <a class="split-a" href="#download" data-primary-download><span data-primary-label>Download Shortcut</span></a>
+              <a class="split-a" href="#download" data-primary-download><span data-primary-label>Download Clazy</span></a>
               <a class="split-b" href="#how">See how it works</a>
             </div>
           </div>
 
-          <div class="hero-right" aria-label="Animated example of Shortcut expanding a trigger into a full prompt">
+          <div class="hero-right" aria-label="Animated example of Clazy expanding a trigger into a full prompt">
             <canvas class="dither" aria-hidden="true"></canvas>
             <div class="hud-top">
               <p class="mono hud-title">PASTE IS<br />ALWAYS ---<br />ONE KEY AWAY</p>
@@ -111,6 +107,22 @@
       </main>
     </div>
 
+    <!-- ================= DEMO ================= -->
+    <section class="frame demo" id="demo" aria-labelledby="demo-title">
+      <div class="frame-bar mono">
+        <span>DEMO</span>
+        <span class="dotted">● 34 SECONDS</span>
+        <span>SOUND ON</span>
+      </div>
+      <h2 id="demo-title" class="sr-only">Watch the Clazy demo</h2>
+      <div class="demo-body">
+        <video class="demo-video" controls playsinline preload="none" poster="/assets/clazy-demo-poster.jpg" width="1920" height="1080">
+          <source src="/assets/clazy-demo.mp4" type="video/mp4" />
+          <a href="/assets/clazy-demo.mp4">Download the demo video</a>
+        </video>
+      </div>
+    </section>
+
     <!-- ================= WHERE ================= -->
     <section class="frame where" id="where" aria-labelledby="where-title">
       <div class="frame-bar mono">
@@ -154,7 +166,7 @@
           <span class="row-num mono">(001)</span>
           <div class="row-main">
             <h3>Global hotkeys</h3>
-            <p>Give a prompt <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>1</kbd> and it pastes into whatever app has focus. Shortcut warns you before you take a combo your browser or OS already uses.</p>
+            <p>Give a prompt <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>1</kbd> and it pastes into whatever app has focus. Clazy warns you before you take a combo your browser or OS already uses.</p>
             <div class="row-detail mono"><span>Code review</span><span class="arrow">→</span><span>Ctrl+Alt+1</span><span class="ok">● active</span></div>
           </div>
           <div class="row-tags"><span class="mono tag-label">Examples</span><div class="tags"><span>Ctrl+Alt+1</span><span>Any app</span><span>Conflict warnings</span></div></div>
@@ -164,7 +176,7 @@
           <span class="row-num mono">(002)</span>
           <div class="row-main">
             <h3>Text triggers</h3>
-            <p>Type <code>;push</code> in your terminal or <code>;review</code> in a chat box. Shortcut erases the trigger and pastes the full prompt in its place.</p>
+            <p>Type <code>;push</code> in your terminal or <code>;review</code> in a chat box. Clazy erases the trigger and pastes the full prompt in its place.</p>
             <div class="row-detail mono"><span class="strike">;push</span><span class="arrow">→</span><span>Look at my staged changes, group them into commits…</span></div>
           </div>
           <div class="row-tags"><span class="mono tag-label">Examples</span><div class="tags"><span>;push</span><span>;review</span><span>Layout-aware</span></div></div>
@@ -184,7 +196,7 @@
           <span class="row-num mono">(004)</span>
           <div class="row-main">
             <h3>Fill-in variables</h3>
-            <p>Write <code>{{subject}}</code> once and Shortcut asks for it before pasting — with defaults, dropdowns and your last answer remembered.</p>
+            <p>Write <code>{{subject}}</code> once and Clazy asks for it before pasting — with defaults, dropdowns and your last answer remembered.</p>
             <div class="row-detail mono"><span>{{subject}}, cinematic lighting --ar {{aspect:16:9|1:1}}</span></div>
           </div>
           <div class="row-tags"><span class="mono tag-label">Examples</span><div class="tags"><span>{{subject}}</span><span>{{lang=Python}}</span><span>{{tone:a|b}}</span></div></div>
@@ -211,7 +223,7 @@
           <button class="row-toggle" aria-expanded="false" aria-label="Show example: Private by default"><span></span></button>
         </li>
       </ol>
-      <div class="rows-cta"><a class="pill" href="#download">Get Shortcut</a></div>
+      <div class="rows-cta"><a class="pill" href="#download">Get Clazy</a></div>
     </section>
 
     <!-- ================= PROCESS ================= -->
@@ -279,7 +291,7 @@ Focus on: <span class="caret"></span></code></pre>
         <span class="dotted">● <span data-version>LATEST</span></span>
         <span>FREE · MIT</span>
       </div>
-      <h2 id="download-title" class="h-services dl-title">Get Shortcut.</h2>
+      <h2 id="download-title" class="h-services dl-title">Get Clazy.</h2>
       <div class="release-notice mono" data-release-notice hidden>
         <span class="dot" aria-hidden="true"></span>
         <p>THE FIRST INSTALLERS ARE BEING BUILT. CHECK BACK SOON — OR BUILD FROM SOURCE ON <a data-repo-link href="https://github.com/Rachit315/Shortcut">GITHUB</a>.</p>
@@ -306,7 +318,7 @@ Focus on: <span class="caret"></span></code></pre>
           <p class="mono meta">UBUNTU 22.04+ · X11 SESSION</p>
           <a class="pill" data-asset="deb" href="/download/linux-deb">Download .deb</a>
           <a class="alt" data-asset="appimage" href="/download/linux-appimage">or the .AppImage</a>
-          <p class="note">Install with <code>sudo apt install ./Shortcut-linux-amd64.deb</code>. Hotkeys and pasting need an X11 session.</p>
+          <p class="note">Install with <code>sudo apt install ./Clazy-linux-amd64.deb</code>. Hotkeys and pasting need an X11 session.</p>
         </article>
       </div>
       <p class="dl-all mono"><a data-releases-link href="https://github.com/Rachit315/Shortcut/releases">ALL RELEASES &amp; SOURCE ↗</a></p>
@@ -324,7 +336,7 @@ Focus on: <span class="caret"></span></code></pre>
           <details class="reveal"><summary>Is it really free?</summary><p>Yes. The app is free and open source under the MIT licence, with no limits on prompts, hotkeys or triggers.</p></details>
           <details class="reveal"><summary>Which apps does it work with?</summary><p>Any app where you can paste text: browsers (ChatGPT, Claude, Gemini), editors and IDEs (Cursor, VS Code, JetBrains), terminals, Slack, Notion and email. If an app blocks synthetic paste, switch Settings → Paste method to “Type it out”.</p></details>
           <details class="reveal"><summary>Does it work in the terminal?</summary><p>Yes. On Linux, set the paste keystroke to <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>V</kbd> in Settings, because most Linux terminals don't paste with <kbd>Ctrl</kbd><kbd>V</kbd>. Windows Terminal and macOS terminals work out of the box.</p></details>
-          <details class="reveal"><summary>Why does macOS ask for permissions?</summary><p>macOS requires Accessibility permission for any app that presses keys for you — that's how Shortcut sends ⌘V. Text triggers may also need Input Monitoring. Shortcut walks you through both on first launch.</p></details>
+          <details class="reveal"><summary>Why does macOS ask for permissions?</summary><p>macOS requires Accessibility permission for any app that presses keys for you — that's how Clazy sends ⌘V. Text triggers may also need Input Monitoring. Clazy walks you through both on first launch.</p></details>
           <details class="reveal"><summary>Why does my system warn me when I open it?</summary><p>The installers aren't signed with a paid Apple or Microsoft certificate yet, so macOS asks you to confirm with right-click → Open and Windows SmartScreen asks you to click “More info → Run anyway”. The full source is on GitHub and every installer is built there by GitHub Actions.</p></details>
           <details class="reveal"><summary>Where are my prompts stored?</summary><p>In a SQLite database in your user data folder (Settings → About shows the exact path). Export to JSON or Markdown any time. Nothing is uploaded anywhere.</p></details>
         </div>
@@ -336,7 +348,7 @@ Focus on: <span class="caret"></span></code></pre>
       <div class="container footer-top">
         <div class="footer-cta">
           <p class="mono">STOP RETYPING. START PRESSING.</p>
-          <a class="pill" href="#download" data-primary-download><span data-primary-label>Download Shortcut</span></a>
+          <a class="pill" href="#download" data-primary-download><span data-primary-label>Download Clazy</span></a>
         </div>
         <nav class="footer-links mono" aria-label="Footer">
           <a href="#features">Features</a>
@@ -346,8 +358,8 @@ Focus on: <span class="caret"></span></code></pre>
           <a data-prd-link href="https://github.com/Rachit315/Shortcut/blob/main/docs/PRD.md">Product spec</a>
         </nav>
       </div>
-      <div class="wordmark" aria-hidden="true">SHORTCUT</div>
-      <div class="container footer-bottom mono"><span>© 2026 SHORTCUT · MIT LICENSE</span><span>MADE FOR PEOPLE WHO TALK TO AI ALL DAY</span></div>
+      <div class="wordmark" aria-hidden="true">CLAZY</div>
+      <div class="container footer-bottom mono"><span>© 2026 CLAZY · MIT LICENSE</span><span>MADE FOR PEOPLE WHO TALK TO AI ALL DAY</span></div>
       <div class="checker" aria-hidden="true"></div>
     </footer>
   </body>

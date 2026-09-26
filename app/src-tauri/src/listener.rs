@@ -16,7 +16,7 @@ pub type Sink = Box<dyn Fn(KeyInput) + Send + 'static>;
 /// through `on_error` because some platforms only fail after the thread starts.
 pub fn start(sink: Sink, on_error: Box<dyn Fn(String) + Send + 'static>) {
     std::thread::Builder::new()
-        .name("shortcut-keys".into())
+        .name("clazy-keys".into())
         .spawn(move || {
             if let Err(e) = imp::run(sink) {
                 on_error(e);
@@ -162,7 +162,7 @@ mod imp {
             },
         )
         .map_err(|_| {
-            "Text triggers need permission: allow Shortcut under System Settings → Privacy & Security → Accessibility (and Input Monitoring), then restart Shortcut.".to_string()
+            "Text triggers need permission: allow Clazy under System Settings → Privacy & Security → Accessibility (and Input Monitoring), then restart Clazy.".to_string()
         })?;
         let source = tap
             .mach_port

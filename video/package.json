@@ -1,0 +1,27 @@
+{
+  "name": "clazy-demo-video",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Clazy product demo video (Remotion). Renders media/clazy-demo.mp4.",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "music": "node scripts/make-music.mjs",
+    "render": "node scripts/make-music.mjs && remotion render src/index.ts ClazyDemo ../site/assets/clazy-demo.mp4 --codec=h264 --crf=16 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k",
+    "still": "remotion still src/index.ts ClazyDemo out/still.png"
+  },
+  "dependencies": {
+    "@fontsource/geist": "^5.3.0",
+    "@fontsource/geist-mono": "^5.3.0",
+    "@remotion/cli": "^4.0.529",
+    "@remotion/paths": "^4.0.529",
+    "@remotion/shapes": "^4.0.529",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "remotion": "^4.0.529"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}

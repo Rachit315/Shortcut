@@ -67,7 +67,7 @@ impl PasteService {
     pub fn start() -> Self {
         let (tx, rx) = channel::<Job>();
         thread::Builder::new()
-            .name("shortcut-paste".into())
+            .name("clazy-paste".into())
             .spawn(move || {
                 let mut worker = Worker { enigo: None, clipboard: None };
                 while let Ok(job) = rx.recv() {
@@ -128,7 +128,7 @@ impl Worker {
     fn enigo(&mut self) -> Result<&mut Enigo, String> {
         if self.enigo.is_none() {
             let e = Enigo::new(&enigo::Settings::default()).map_err(|e| {
-                format!("Can't simulate keystrokes ({e}). On macOS, allow Shortcut under System Settings → Privacy & Security → Accessibility.")
+                format!("Can't simulate keystrokes ({e}). On macOS, allow Clazy under System Settings → Privacy & Security → Accessibility.")
             })?;
             self.enigo = Some(e);
         }

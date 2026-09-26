@@ -3,11 +3,11 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/download/macos", "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-macos-universal.dmg", "permanent": false },
-    { "source": "/download/windows", "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-windows-x64-setup.exe", "permanent": false },
-    { "source": "/download/windows-msi", "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-windows-x64.msi", "permanent": false },
-    { "source": "/download/linux-deb", "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-linux-amd64.deb", "permanent": false },
-    { "source": "/download/linux-appimage", "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Shortcut-linux-amd64.AppImage", "permanent": false },
+    { "source": "/download/macos", "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Clazy-macos-universal.dmg", "permanent": false },
+    { "source": "/download/windows", "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Clazy-windows-x64-setup.exe", "permanent": false },
+    { "source": "/download/windows-msi", "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Clazy-windows-x64.msi", "permanent": false },
+    { "source": "/download/linux-deb", "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Clazy-linux-amd64.deb", "permanent": false },
+    { "source": "/download/linux-appimage", "destination": "https://github.com/Rachit315/Shortcut/releases/latest/download/Clazy-linux-amd64.AppImage", "permanent": false },
     { "source": "/download", "destination": "/#download", "permanent": false }
   ],
   "headers": [

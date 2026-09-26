@@ -1,11 +1,11 @@
-"""Real end-to-end test of the Shortcut desktop binary on Linux/X11.
+"""Real end-to-end test of the Clazy desktop binary on Linux/X11.
 
 Starts the actual app under Xvfb, then drives it like a user with xdotool:
 global hotkeys, text triggers, {{cursor}}, {{clipboard}}, clipboard restore,
 the quick palette (search + fill-in form) and usage stats — and checks what
 actually lands in *another* application's text box.
 
-Usage (see e2e/run.sh):  python3 e2e/run_e2e.py <path-to-shortcut-binary>
+Usage (see e2e/run.sh):  python3 e2e/run_e2e.py <path-to-clazy-binary>
 Requires: Xvfb, xdotool, xclip, python3 with tkinter.
 """
 import datetime
@@ -24,7 +24,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DISPLAY = os.environ.get("E2E_DISPLAY", ":99")
 ARTIFACTS = os.environ.get("E2E_ARTIFACTS")
 
-work = tempfile.mkdtemp(prefix="shortcut-e2e-")
+work = tempfile.mkdtemp(prefix="clazy-e2e-")
 data_dir = os.path.join(work, "data")
 target_dir = os.path.join(work, "target")
 os.makedirs(data_dir)
@@ -33,8 +33,8 @@ os.makedirs(target_dir)
 env = dict(os.environ)
 env.update(
     DISPLAY=DISPLAY,
-    SHORTCUT_DATA_DIR=data_dir,
-    SHORTCUT_START_HIDDEN="1",
+    CLAZY_DATA_DIR=data_dir,
+    CLAZY_START_HIDDEN="1",
     WEBKIT_DISABLE_COMPOSITING_MODE="1",
     WEBKIT_DISABLE_DMABUF_RENDERER="1",
     NO_AT_BRIDGE="1",
@@ -110,7 +110,7 @@ def screenshot(name):
 
 
 def db():
-    return sqlite3.connect(os.path.join(data_dir, "shortcut.db"))
+    return sqlite3.connect(os.path.join(data_dir, "clazy.db"))
 
 
 try:
@@ -119,13 +119,13 @@ try:
 
     # ---- 1. First launch: creates the database and seeds the starter pack.
     app = spawn([BINARY], stdout=open(os.path.join(work, "app1.log"), "w"))
-    assert wait_for(lambda: os.path.exists(os.path.join(data_dir, "shortcut.db")), 20), "database not created"
+    assert wait_for(lambda: os.path.exists(os.path.join(data_dir, "clazy.db")), 20), "database not created"
     time.sleep(3)
     check("app starts and stays running", app.poll() is None, f"exit={app.poll()}")
     with db() as c:
         titles = [r[0] for r in c.execute("SELECT title FROM prompts ORDER BY title")]
     check("starter pack seeded", len(titles) == 5 and "Commit & push" in titles, str(titles))
-    check("first run shows the main window", wait_for(lambda: sh("xdotool", "search", "--onlyvisible", "--name", "^Shortcut$", check=False), 5), "main window not visible")
+    check("first run shows the main window", wait_for(lambda: sh("xdotool", "search", "--onlyvisible", "--name", "^Clazy$", check=False), 5), "main window not visible")
     screenshot("01-first-run")
     app.terminate()
     app.wait(10)
@@ -135,7 +135,7 @@ try:
     with db() as c:
         c.execute("INSERT OR REPLACE INTO kv (key, value) VALUES ('settings', ?)", (json.dumps({"onboarding_complete": True}),))
         rows = [
-            ("Hello prompt", "Hello from Shortcut {{date}}", "Ctrl+Alt+9", ";e2e"),
+            ("Hello prompt", "Hello from Clazy {{date}}", "Ctrl+Alt+9", ";e2e"),
             ("Cursor test", "AB{{cursor}}CD", None, ";cur"),
             ("Fix clipboard", "Fix this: {{clipboard}}", "Ctrl+Alt+8", None),
             ("Greeting", "Hi {{name}}, welcome!", None, ";hi"),
@@ -153,7 +153,7 @@ try:
     app = spawn([BINARY, "--minimized"], stdout=open(os.path.join(work, "app2.log"), "w"))
     time.sleep(4)
     check("relaunch in background", app.poll() is None, f"exit={app.poll()}")
-    check("no window shown when onboarded + --minimized", not sh("xdotool", "search", "--onlyvisible", "--name", "^Shortcut$", check=False))
+    check("no window shown when onboarded + --minimized", not sh("xdotool", "search", "--onlyvisible", "--name", "^Clazy$", check=False))
     today = datetime.date.today().isoformat()
 
     # ---- 4. Global hotkey pastes into the focused app and restores the clipboard.
@@ -161,8 +161,8 @@ try:
     clear_target()
     set_clipboard("ORIGINAL-CLIPBOARD")
     sh("xdotool", "key", "--clearmodifiers", "ctrl+alt+9")
-    got = wait_for(lambda: content() == f"Hello from Shortcut {today}" and content(), 5)
-    check("hotkey pastes rendered prompt", got == f"Hello from Shortcut {today}", repr(content()))
+    got = wait_for(lambda: content() == f"Hello from Clazy {today}" and content(), 5)
+    check("hotkey pastes rendered prompt", got == f"Hello from Clazy {today}", repr(content()))
     restored = wait_for(lambda: get_clipboard() == "ORIGINAL-CLIPBOARD", 3)
     check("clipboard restored after paste", restored, repr(get_clipboard()))
 
@@ -170,7 +170,7 @@ try:
     focus_target()
     clear_target()
     sh("xdotool", "type", "--delay", "40", "note: ;e2e")
-    got = wait_for(lambda: content() == f"note: Hello from Shortcut {today}", 5)
+    got = wait_for(lambda: content() == f"note: Hello from Clazy {today}", 5)
     check("text trigger expands and erases the trigger", got, repr(content()))
 
     # ---- 6. {{cursor}} places the caret.
@@ -210,7 +210,7 @@ try:
     time.sleep(0.4)
     screenshot("02b-palette-typed")
     sh("xdotool", "key", "Return")
-    got = wait_for(lambda: content() == f"Hello from Shortcut {today}", 6)
+    got = wait_for(lambda: content() == f"Hello from Clazy {today}", 6)
     check("palette pastes into the previous app", got, repr(content()))
     screenshot("02c-after-enter")
     check("palette hides after pasting", not sh("xdotool", "search", "--onlyvisible", "--name", "Quick palette", check=False))

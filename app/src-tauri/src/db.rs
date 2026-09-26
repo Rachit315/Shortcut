@@ -771,9 +771,9 @@ mod tests {
 
     #[test]
     fn persists_to_disk() {
-        let dir = std::env::temp_dir().join(format!("shortcut-test-{}", new_id()));
+        let dir = std::env::temp_dir().join(format!("clazy-test-{}", new_id()));
         std::fs::create_dir_all(&dir).unwrap();
-        let path = dir.join("shortcut.db");
+        let path = dir.join("clazy.db");
         {
             let mut s = Store::open(&path).unwrap();
             s.seed_if_first_run().unwrap();

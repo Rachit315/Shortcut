@@ -23,7 +23,7 @@ use tauri_plugin_global_shortcut::ShortcutState;
 
 fn build_windows(app: &AppHandle) -> tauri::Result<()> {
     WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
-        .title("Shortcut")
+        .title("Clazy")
         .inner_size(1120.0, 740.0)
         .min_inner_size(900.0, 600.0)
         .theme(Some(Theme::Dark))
@@ -32,7 +32,7 @@ fn build_windows(app: &AppHandle) -> tauri::Result<()> {
         .center()
         .build()?;
     WebviewWindowBuilder::new(app, "palette", WebviewUrl::App("palette.html".into()))
-        .title("Shortcut — Quick palette")
+        .title("Clazy — Quick palette")
         .inner_size(640.0, 440.0)
         .decorations(false)
         .resizable(false)
@@ -47,17 +47,17 @@ fn build_windows(app: &AppHandle) -> tauri::Result<()> {
 }
 
 fn build_tray(app: &AppHandle, paused: bool) -> tauri::Result<()> {
-    let open = MenuItem::with_id(app, "open", "Open Shortcut", true, None::<&str>)?;
+    let open = MenuItem::with_id(app, "open", "Open Clazy", true, None::<&str>)?;
     let palette = MenuItem::with_id(app, "palette", "Quick palette", true, None::<&str>)?;
     let pause = CheckMenuItem::with_id(app, "pause", "Pause shortcuts", true, paused, None::<&str>)?;
-    let quit = MenuItem::with_id(app, "quit", "Quit Shortcut", true, None::<&str>)?;
+    let quit = MenuItem::with_id(app, "quit", "Quit Clazy", true, None::<&str>)?;
     let menu = Menu::with_items(
         app,
         &[&open, &palette, &PredefinedMenuItem::separator(app)?, &pause, &PredefinedMenuItem::separator(app)?, &quit],
     )?;
     *app.state::<AppState>().pause_item.lock().unwrap() = Some(pause);
     let mut builder = TrayIconBuilder::with_id("tray")
-        .tooltip("Shortcut")
+        .tooltip("Clazy")
         .menu(&menu)
         .show_menu_on_left_click(false)
         .on_menu_event(|app, event| match event.id().as_ref() {
@@ -83,10 +83,29 @@ fn build_tray(app: &AppHandle, paused: bool) -> tauri::Result<()> {
     Ok(())
 }
 
+/// Clazy was called "Shortcut" in v0.1. Carry an existing library over from the old data folder once.
+fn migrate_from_shortcut(dir: &std::path::Path) {
+    let Some(old) = dir.parent().map(|p| p.join("app.shortcut.desktop")) else { return };
+    if dir.join("clazy.db").exists() || !old.join("shortcut.db").exists() {
+        return;
+    }
+    if std::fs::create_dir_all(dir).is_err() {
+        return;
+    }
+    for suffix in ["", "-wal", "-shm"] {
+        let from = old.join(format!("shortcut.db{suffix}"));
+        if from.exists() {
+            if let Err(e) = std::fs::copy(&from, dir.join(format!("clazy.db{suffix}"))) {
+                eprintln!("clazy: could not migrate {}: {e}", from.display());
+            }
+        }
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let start_hidden =
-        std::env::args().any(|a| a == "--minimized") || std::env::var_os("SHORTCUT_START_HIDDEN").is_some();
+        std::env::args().any(|a| a == "--minimized") || std::env::var_os("CLAZY_START_HIDDEN").is_some();
 
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| engine::show_main(app)))
@@ -106,12 +125,16 @@ pub fn run() {
             #[cfg(target_os = "macos")]
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
-            let data_dir = match std::env::var_os("SHORTCUT_DATA_DIR") {
+            let data_dir = match std::env::var_os("CLAZY_DATA_DIR") {
                 Some(d) => std::path::PathBuf::from(d),
-                None => app.path().app_data_dir()?,
+                None => {
+                    let dir = app.path().app_data_dir()?;
+                    migrate_from_shortcut(&dir);
+                    dir
+                }
             };
             std::fs::create_dir_all(&data_dir)?;
-            let mut store = db::Store::open(&data_dir.join("shortcut.db"))?;
+            let mut store = db::Store::open(&data_dir.join("clazy.db"))?;
             store.seed_if_first_run()?;
             let settings = store.settings()?;
             app.manage(AppState::new(store, data_dir));
@@ -120,7 +143,7 @@ pub fn run() {
             build_windows(&handle)?;
             if let Err(e) = build_tray(&handle, settings.paused) {
                 // No tray (e.g. a desktop without an indicator service) — the window still works.
-                eprintln!("shortcut: tray unavailable: {e}");
+                eprintln!("clazy: tray unavailable: {e}");
             }
             engine::sync(&handle);
             if !start_hidden || !settings.onboarding_complete {
@@ -168,7 +191,7 @@ pub fn run() {
             commands::open_accessibility_settings,
         ])
         .build(tauri::generate_context!())
-        .expect("error while building Shortcut");
+        .expect("error while building Clazy");
 
     app.run(|_app, event| {
         // Keep running in the tray when every window is hidden/closed.

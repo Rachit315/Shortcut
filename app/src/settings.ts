@@ -3,6 +3,7 @@ import { api, errorText } from "./api";
 import type { AppCtx } from "./main";
 import type { PasteKeystroke, PasteMethod, Settings } from "./lib/types";
 import { createRecorder } from "./recorder";
+import { runOnboarding } from "./onboarding";
 import { clear, h, icon, toast } from "./ui";
 
 function toggle(label: string, checked: boolean, onChange: (v: boolean) => void, help?: string): HTMLElement {
@@ -75,7 +76,7 @@ export function renderSettings(col: HTMLElement, ctx: AppCtx, reload: () => Prom
     const ext = format === "json" ? "json" : "md";
     const path = await save({
       title: "Export prompts",
-      defaultPath: `shortcut-prompts.${ext}`,
+      defaultPath: `clazy-prompts.${ext}`,
       filters: [{ name: format === "json" ? "JSON" : "Markdown", extensions: [ext] }],
     });
     if (!path) return;
@@ -92,7 +93,7 @@ export function renderSettings(col: HTMLElement, ctx: AppCtx, reload: () => Prom
       title: "Import prompts",
       multiple: false,
       directory: false,
-      filters: [{ name: "Shortcut export", extensions: ["json", "md", "markdown"] }],
+      filters: [{ name: "Clazy export", extensions: ["json", "md", "markdown"] }],
     });
     if (!path || Array.isArray(path)) return;
     try {
@@ -122,7 +123,7 @@ export function renderSettings(col: HTMLElement, ctx: AppCtx, reload: () => Prom
             { class: "banner banner-error" },
             icon("shield"),
             h("div", null,
-              h("p", null, h("strong", null, "Accessibility permission needed. "), "macOS blocks Shortcut from pasting and from reading text triggers until you allow it."),
+              h("p", null, h("strong", null, "Accessibility permission needed. "), "macOS blocks Clazy from pasting and from reading text triggers until you allow it."),
               h("button", { class: "btn btn-small btn-primary", onclick: () => void api.openAccessibilitySettings() }, "Open System Settings")),
           )
         : null,
@@ -150,7 +151,7 @@ export function renderSettings(col: HTMLElement, ctx: AppCtx, reload: () => Prom
               segmented<PasteKeystroke>("Paste keystroke", s.paste_keystroke, [["ctrl_v", "Ctrl+V"], ["ctrl_shift_v", "Ctrl+Shift+V"], ["shift_insert", "Shift+Insert"]], (v) => void update({ paste_keystroke: v })),
             )
           : null,
-        toggle("Restore my clipboard after pasting", s.restore_clipboard, (v) => void update({ restore_clipboard: v }), "Shortcut borrows the clipboard for a moment, then puts back what you had copied."),
+        toggle("Restore my clipboard after pasting", s.restore_clipboard, (v) => void update({ restore_clipboard: v }), "Clazy borrows the clipboard for a moment, then puts back what you had copied."),
         h("div", { class: "setting-row" },
           h("div", null, h("span", { class: "setting-label" }, "Restore delay"), h("p", { class: "help" }, "Increase this if an app pastes your old clipboard instead of the prompt.")),
           h("div", { class: "inline" }, delay, h("span", { class: "label muted" }, "ms")),
@@ -161,7 +162,7 @@ export function renderSettings(col: HTMLElement, ctx: AppCtx, reload: () => Prom
         "section",
         { class: "card settings-card" },
         h("h2", null, "Text triggers"),
-        toggle("Expand text triggers", s.triggers_enabled, (v) => void update({ triggers_enabled: v }), "Typing a trigger such as ;push anywhere replaces it with the prompt. Shortcut keeps only the last 64 typed characters in memory and never stores or sends them."),
+        toggle("Expand text triggers", s.triggers_enabled, (v) => void update({ triggers_enabled: v }), "Typing a trigger such as ;push anywhere replaces it with the prompt. Clazy keeps only the last 64 typed characters in memory and never stores or sends them."),
         status.listener_error ? h("div", { class: "field-message is-error" }, status.listener_error) : null,
       ),
 
@@ -169,7 +170,7 @@ export function renderSettings(col: HTMLElement, ctx: AppCtx, reload: () => Prom
         "section",
         { class: "card settings-card" },
         h("h2", null, "General"),
-        toggle("Launch Shortcut at login", s.launch_at_login, (v) => void update({ launch_at_login: v }), "Starts quietly in the tray / menu bar."),
+        toggle("Launch Clazy at login", s.launch_at_login, (v) => void update({ launch_at_login: v }), "Starts quietly in the tray / menu bar."),
         toggle("Pause all shortcuts", s.paused, (v) => void update({ paused: v }, v ? "Shortcuts paused" : "Shortcuts resumed"), "Handy while gaming or screen-sharing."),
       ),
 
@@ -192,9 +193,12 @@ export function renderSettings(col: HTMLElement, ctx: AppCtx, reload: () => Prom
         h("dl", { class: "about-list" },
           h("dt", { class: "label" }, "Version"), h("dd", null, info.version),
           h("dt", { class: "label" }, "Data folder"), h("dd", { class: "mono" }, info.data_dir),
-          h("dt", { class: "label" }, "Privacy"), h("dd", null, "Everything stays on this device. Shortcut makes no network requests and has no telemetry."),
+          h("dt", { class: "label" }, "Privacy"), h("dd", null, "Everything stays on this device. Clazy makes no network requests and has no telemetry."),
         ),
-        h("button", { class: "btn btn-ghost btn-small", onclick: () => void api.hideMain() }, "Hide window to tray"),
+        h("div", { class: "button-row" },
+          h("button", { class: "btn btn-secondary btn-small", onclick: () => void runOnboarding(ctx, reload, { replay: true }) }, "Replay the product tour"),
+          h("button", { class: "btn btn-ghost btn-small", onclick: () => void api.hideMain() }, "Hide window to tray"),
+        ),
       ),
     ),
   );

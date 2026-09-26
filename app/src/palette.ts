@@ -74,7 +74,7 @@ function filter() {
 function paintResults() {
   clear(list);
   if (P.results.length === 0) {
-    list.append(h("li", { class: "palette-empty" }, P.prompts.length ? "No prompts match." : "No prompts yet — add one in the Shortcut window."));
+    list.append(h("li", { class: "palette-empty" }, P.prompts.length ? "No prompts match." : "No prompts yet — add one in the Clazy window."));
     return;
   }
   P.results.forEach((p, i) => {

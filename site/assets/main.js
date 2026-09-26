@@ -1,5 +1,5 @@
-// Shortcut landing page: dither field, HUD demo, reveals, feature rows and download links.
-const cfg = window.SHORTCUT_CONFIG || { repo: "Rachit315/Shortcut" };
+// Clazy landing page: dither field, HUD demo, reveals, feature rows and download links.
+const cfg = window.CLAZY_CONFIG || { repo: "Rachit315/Shortcut" };
 const REPO_URL = `https://github.com/${cfg.repo}`;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 

@@ -328,8 +328,8 @@ kbd {
   height: 26px;
   padding: 0 8px;
   font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--text-kbd-size);
+  font-weight: var(--text-kbd-weight);
   color: var(--color-text-primary);
   background: var(--color-surface);
   border: 1px solid var(--color-border-strong);
@@ -353,8 +353,8 @@ kbd {
 
 .badge-mono {
   font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
+  font-size: var(--text-kbd-size);
+  font-weight: var(--text-kbd-weight);
 }
 
 .badge-soft {

@@ -1,8 +1,8 @@
-# Shortcut — Product Requirements Document
+# Clazy — Product Requirements Document
 
 | | |
 |---|---|
-| **Product** | Shortcut — a prompt & snippet launcher for people who use AI tools daily |
+| **Product** | Clazy — a prompt & snippet launcher for people who use AI tools daily |
 | **Status** | MVP in build (this repository) |
 | **Owner** | Product + Engineering |
 | **Last updated** | 2026-09-26 |
@@ -11,7 +11,7 @@
 
 ## 1. Overview & vision
 
-**Vision.** Your best prompts should be one keystroke away, in every app you use. Shortcut is a small background app that stores the prompts you reuse and pastes any of them into whatever text field has focus: ChatGPT, Claude, Cursor, VS Code, a terminal, Slack, or a browser form. You can trigger a prompt with a global hotkey (`Ctrl+Alt+1`), a typed abbreviation (`;push`), or a searchable palette (`Ctrl+Shift+Space`). Shortcut is local-first and private by default, and is built specifically for AI prompts: fill-in variables, a cursor marker, and prompt packs. It does not try to be a general automation tool.
+**Vision.** Your best prompts should be one keystroke away, in every app you use. Clazy is a small background app that stores the prompts you reuse and pastes any of them into whatever text field has focus: ChatGPT, Claude, Cursor, VS Code, a terminal, Slack, or a browser form. You can trigger a prompt with a global hotkey (`Ctrl+Alt+1`), a typed abbreviation (`;push`), or a searchable palette (`Ctrl+Shift+Space`). Clazy is local-first and private by default, and is built specifically for AI prompts: fill-in variables, a cursor marker, and prompt packs. It does not try to be a general automation tool.
 
 ### Problem statement
 
@@ -80,7 +80,7 @@ Because the app is private by default, metrics come from **opt-in** anonymous te
 | US-5 | As Marco, I trigger my style prompt and am asked for `{{subject}}` before it is pasted. | A small form lists each fill-in variable once; defaults and last-used values are pre-filled; Enter pastes; Esc cancels without pasting. |
 | US-6 | As Priya, I set a hotkey that is already used by the OS or another prompt, and I'm warned. | Duplicate combos are blocked; known OS/app combos (e.g. `Ctrl+1`, `Cmd+Q`) show a warning; a failed OS registration is shown next to the prompt. |
 | US-7 | As any user, I export my prompts and import them on another machine. | Export to JSON (lossless) and Markdown; importing JSON restores prompts, folders, tags, hotkeys and triggers; conflicting shortcuts are dropped with a report. |
-| US-8 | As any user, Shortcut starts with my computer and stays out of the way. | Optional launch-at-login; lives in the tray/menu bar; closing the window hides it; idle memory < 120 MB. |
+| US-8 | As any user, Clazy starts with my computer and stays out of the way. | Optional launch-at-login; lives in the tray/menu bar; closing the window hides it; idle memory < 120 MB. |
 | US-9 | As any user, I can pause all shortcuts, for example while gaming or screen-sharing. | Tray → "Pause shortcuts" disables hotkeys and triggers until resumed; the state persists across restarts. |
 
 ---
@@ -121,7 +121,7 @@ Priorities: **P0** = MVP blocker, **P1** = MVP if time allows, **P2** = later ph
 | TT-1 | Assign an optional unique trigger per prompt (2–32 chars, no whitespace). | P0 | Validation errors are shown inline; a leading symbol such as `;` is recommended. |
 | TT-2 | Expand when the typed sequence ends with the trigger. | P0 | The trigger text is erased with backspaces, then the prompt is pasted. |
 | TT-3 | Reset the typing buffer on navigation. | P0 | Enter, Tab, Esc, arrow keys, mouse clicks and modifier chords clear the buffer, so no stale matches occur. |
-| TT-4 | Ignore Shortcut's own injected keystrokes. | P0 | No recursive expansion. |
+| TT-4 | Ignore Clazy's own injected keystrokes. | P0 | No recursive expansion. |
 | TT-5 | Global on/off switch. | P0 | Settings → "Text triggers" stops all keystroke processing immediately; the OS keyboard listener is never started while triggers are off. |
 | TT-6 | Prefix-conflict detection. | P1 | Warn when one trigger is a suffix of another (`;p` vs `;push`). |
 
@@ -143,7 +143,7 @@ Priorities: **P0** = MVP blocker, **P1** = MVP if time allows, **P2** = later ph
 | PST-2 | Configurable paste keystroke on Windows/Linux. | P0 | Options: `Ctrl+V` (default), `Ctrl+Shift+V` (terminals), `Shift+Insert`. |
 | PST-3 | "Type it out" fallback mode. | P0 | For apps that block synthetic paste, the text is typed character by character. |
 | PST-4 | Configurable restore delay. | P0 | Default 300 ms (range 50–2,000 ms); restoring can be disabled. |
-| PST-5 | Secure and password fields. | P0 | The OS blocks synthetic input into secure fields (macOS Secure Input). Shortcut detects that the paste had no effect only where the OS exposes it; otherwise it is documented as a known limitation, and the clipboard still holds the prompt so the user can paste manually. |
+| PST-5 | Secure and password fields. | P0 | The OS blocks synthetic input into secure fields (macOS Secure Input). Clazy detects that the paste had no effect only where the OS exposes it; otherwise it is documented as a known limitation, and the clipboard still holds the prompt so the user can paste manually. |
 | PST-6 | Non-text clipboard content. | P1 | If the clipboard holds an image or files, it is not restored (text-only restore); the user is told once. |
 
 ### 4.6 Variables
@@ -201,7 +201,7 @@ Priorities: **P0** = MVP blocker, **P1** = MVP if time allows, **P2** = later ph
 | **Performance** | Trigger→paste p95 < 150 ms (clipboard mode). Palette open < 100 ms. Cold start < 1.5 s. Library search < 50 ms at 1,000 prompts. |
 | **Footprint** | Installer < 15 MB. Idle RAM < 120 MB with the main window hidden. Idle CPU ≈ 0 % (event-driven, no polling). |
 | **Privacy** | All data is stored in a local SQLite file in the OS app-data directory. No network requests in the MVP. No telemetry. The keyboard listener keeps only the last 64 typed characters in memory and never writes keystrokes to disk or logs; it is not started at all while text triggers are disabled. |
-| **Security** | Tauri capability allow-list: the UI can only call Shortcut's own commands. CSP blocks remote scripts. Import files are parsed with strict schema validation and size limits (10 MB). Release binaries are code-signed (macOS notarised, Windows Authenticode) once certificates are available. |
+| **Security** | Tauri capability allow-list: the UI can only call Clazy's own commands. CSP blocks remote scripts. Import files are parsed with strict schema validation and size limits (10 MB). Release binaries are code-signed (macOS notarised, Windows Authenticode) once certificates are available. |
 | **Reliability** | The SQLite database uses WAL mode with a schema migration table. Crash-safe writes. The clipboard is always restored, even if injection fails. |
 | **Accessibility** | Full keyboard operation of every screen. Visible focus rings. WCAG AA contrast (text `#111827` on `#FFFFFF`, primary `#3B82F6` used for large text/controls only, with `#1D4ED8` for small text). Respects `prefers-reduced-motion`. Screen-reader labels on icon buttons. |
 | **Compatibility** | Windows 10 (1809)+, macOS 11+ (Apple Silicon + Intel universal build), Ubuntu 22.04+/Fedora 38+ on X11. |
@@ -369,11 +369,11 @@ Visual language follows `design/tokens.css`:
    1. **Welcome:** "Your best prompts, one keystroke away." Shows what the app does in three lines.
    2. **Permissions (macOS only):** Accessibility status with an "Open System Settings" button, re-checked live.
    3. **Try it:** shows the starter pack and the palette hotkey, and asks the user to press it and paste into a practice text box in the modal.
-   4. **Finish:** launch-at-login toggle, then "Start using Shortcut", which hides the window to the tray.
+   4. **Finish:** launch-at-login toggle, then "Start using Clazy", which hides the window to the tray.
 
 ### First-run flow
 
-Install → launch → main window opens with onboarding → (macOS) grant Accessibility → practice paste succeeds (success state turns the step green) → enable launch at login (optional) → window hides to tray with a notification: "Shortcut is running in the tray. Press Ctrl+Shift+Space anytime."
+Install → launch → main window opens with onboarding → (macOS) grant Accessibility → practice paste succeeds (success state turns the step green) → enable launch at login (optional) → window hides to tray with a notification: "Clazy is running in the tray. Press Ctrl+Shift+Space anytime."
 
 ---
 

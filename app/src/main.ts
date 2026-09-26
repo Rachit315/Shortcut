@@ -226,7 +226,7 @@ function renderSidebar() {
       "div",
       { class: "brand" },
       h("img", { src: "/icon.svg", alt: "", width: 32, height: 32 }),
-      h("div", null, h("div", { class: "brand-name" }, "Shortcut"), h("div", { class: "label" }, `v${info.version}`)),
+      h("div", null, h("div", { class: "brand-name" }, "Clazy"), h("div", { class: "label" }, `v${info.version}`)),
     ),
     h(
       "nav",
@@ -303,7 +303,7 @@ function renderList() {
       "header",
       { class: "list-header" },
       h("h1", { class: "list-title" }, title),
-      h("button", { class: "btn btn-primary btn-small", onclick: () => void newPrompt(), title: "New prompt (Ctrl/Cmd+N)" }, icon("plus", 14), "New prompt"),
+      h("button", { class: "btn btn-primary btn-small btn-new", onclick: () => void newPrompt(), title: "New prompt (Ctrl/Cmd+N)", "aria-label": "New prompt" }, icon("plus", 14), h("span", { class: "btn-new-text" }, "New")),
     ),
     h("div", { class: "search-wrap" }, icon("search", 16), searchInput),
     h("ul", { class: "prompt-list", id: "prompt-list", role: "listbox", "aria-label": "Prompts" }),
@@ -804,5 +804,5 @@ async function boot() {
 }
 
 void boot().catch((e) => {
-  root.append(h("pre", { class: "fatal" }, `Shortcut failed to start: ${errorText(e)}`));
+  root.append(h("pre", { class: "fatal" }, `Clazy failed to start: ${errorText(e)}`));
 });

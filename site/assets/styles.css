@@ -1,4 +1,41 @@
-/* Shortcut landing page — monochrome technical/editorial. Tokens: tokens.css (from design/tokens.json) */
+/* Clazy landing page — monochrome technical/editorial. Tokens: tokens.css (from design/tokens.json) */
+
+/* Geist + Geist Mono (SIL OFL), self-hosted. PP Neue Montreal / Söhne Mono are used first when installed. */
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/geist-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/geist-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/assets/fonts/geist-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/geist-mono-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/geist-mono-latin-500-normal.woff2") format("woff2");
+}
 
 *,
 *::before,
@@ -1204,7 +1241,7 @@ kbd {
   padding: 24px 12px 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(56px, 15.8vw, 236px);
+  font-size: clamp(88px, 27vw, 400px);
   line-height: 0.82;
   letter-spacing: -0.06em;
   text-align: center;
@@ -1409,4 +1446,23 @@ kbd {
   .dl-all {
     padding: 20px 16px 0;
   }
+}
+
+/* ---------- demo video ---------- */
+.frame.demo {
+  width: 100%;
+}
+
+.demo-body {
+  padding: clamp(12px, 2vw, 24px);
+}
+
+.demo-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
 }

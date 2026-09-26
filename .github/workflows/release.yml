@@ -70,13 +70,13 @@ jobs:
           T=app/src-tauri/target
           case "${{ runner.os }}" in
             macOS)
-              cp $T/universal-apple-darwin/release/bundle/dmg/*.dmg out/Shortcut-macos-universal.dmg ;;
+              cp $T/universal-apple-darwin/release/bundle/dmg/*.dmg out/Clazy-macos-universal.dmg ;;
             Windows)
-              cp $T/release/bundle/nsis/*-setup.exe out/Shortcut-windows-x64-setup.exe
-              cp $T/release/bundle/msi/*.msi out/Shortcut-windows-x64.msi ;;
+              cp $T/release/bundle/nsis/*-setup.exe out/Clazy-windows-x64-setup.exe
+              cp $T/release/bundle/msi/*.msi out/Clazy-windows-x64.msi ;;
             Linux)
-              cp $T/release/bundle/deb/*.deb out/Shortcut-linux-amd64.deb
-              cp $T/release/bundle/appimage/*.AppImage out/Shortcut-linux-amd64.AppImage ;;
+              cp $T/release/bundle/deb/*.deb out/Clazy-linux-amd64.deb
+              cp $T/release/bundle/appimage/*.AppImage out/Clazy-linux-amd64.AppImage ;;
           esac
           ls -la out
 
@@ -107,7 +107,7 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
-          name: Shortcut v${{ steps.version.outputs.version }}
+          name: Clazy v${{ steps.version.outputs.version }}
           target_commitish: ${{ github.sha }}
           make_latest: "true"
           files: out/*
@@ -116,13 +116,13 @@ jobs:
 
             | System | File |
             |---|---|
-            | macOS 11+ (Apple silicon & Intel) | `Shortcut-macos-universal.dmg` |
-            | Windows 10/11 | `Shortcut-windows-x64-setup.exe` (or `.msi`) |
-            | Linux (Ubuntu 22.04+, X11) | `Shortcut-linux-amd64.deb` (or `.AppImage`) |
+            | macOS 11+ (Apple silicon & Intel) | `Clazy-macos-universal.dmg` |
+            | Windows 10/11 | `Clazy-windows-x64-setup.exe` (or `.msi`) |
+            | Linux (Ubuntu 22.04+, X11) | `Clazy-linux-amd64.deb` (or `.AppImage`) |
 
             **First launch**
             - macOS: the app isn't notarized yet — right-click it → Open (or System Settings → Privacy & Security → Open Anyway), then allow Accessibility so it can paste.
             - Windows: if SmartScreen appears, choose "More info → Run anyway".
-            - Linux: `sudo apt install ./Shortcut-linux-amd64.deb`, then launch "Shortcut".
+            - Linux: `sudo apt install ./Clazy-linux-amd64.deb`, then launch "Clazy".
 
             Checksums are in `SHA256SUMS.txt`.

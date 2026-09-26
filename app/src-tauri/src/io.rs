@@ -60,12 +60,12 @@ pub fn to_json(data: &ExportData) -> String {
 }
 
 pub fn from_json(text: &str) -> Result<ExportData, String> {
-    let data: ExportData = serde_json::from_str(text).map_err(|e| format!("Not a valid Shortcut JSON export: {e}"))?;
+    let data: ExportData = serde_json::from_str(text).map_err(|e| format!("Not a valid Clazy JSON export: {e}"))?;
     if data.app != "shortcut" {
-        return Err("This JSON file was not exported by Shortcut.".into());
+        return Err("This JSON file was not exported by Clazy.".into());
     }
     if data.version > EXPORT_VERSION {
-        return Err(format!("This file needs a newer version of Shortcut (format v{}).", data.version));
+        return Err(format!("This file needs a newer version of Clazy (format v{}).", data.version));
     }
     Ok(data)
 }
@@ -89,7 +89,7 @@ fn one_line(s: &str) -> String {
 }
 
 pub fn to_markdown(data: &ExportData) -> String {
-    let mut out = String::from("# Shortcut prompts\n\n");
+    let mut out = String::from("# Clazy prompts\n\n");
     out.push_str(&format!("<!-- Exported {} · format v{} -->\n", data.exported_at, data.version));
     for p in &data.prompts {
         out.push_str(&format!("\n## {}\n\n<!-- shortcut\n", one_line(&p.title)));

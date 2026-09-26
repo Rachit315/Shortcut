@@ -142,7 +142,7 @@ pub fn focus_own_window(win: &tauri::WebviewWindow) {
 #[cfg(not(target_os = "linux"))]
 pub fn focus_own_window(_win: &tauri::WebviewWindow) {}
 
-/// macOS gives focus back to the previous app when Shortcut hides itself (see `engine`).
+/// macOS gives focus back to the previous app when Clazy hides itself (see `engine`).
 #[cfg(target_os = "macos")]
 pub fn save_focus() -> Option<SavedFocus> {
     None

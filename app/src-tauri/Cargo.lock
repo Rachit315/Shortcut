@@ -515,6 +515,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "clazy"
+version = "0.2.0"
+dependencies = [
+ "arboard",
+ "chrono",
+ "core-foundation 0.10.1",
+ "core-graphics 0.24.0",
+ "enigo",
+ "foreign-types-shared 0.3.1",
+ "raw-window-handle",
+ "rdev",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-autostart",
+ "tauri-plugin-dialog",
+ "tauri-plugin-global-shortcut",
+ "tauri-plugin-single-instance",
+ "uuid",
+ "windows-sys 0.59.0",
+ "x11rb",
+]
+
+[[package]]
 name = "clipboard-win"
 version = "5.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3537,32 +3563,6 @@ name = "shlex"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8fadd59c855ef2080decdef8ff161eb6661b86933c9d82e5ba29dc602a55aba"
-
-[[package]]
-name = "shortcut"
-version = "0.1.0"
-dependencies = [
- "arboard",
- "chrono",
- "core-foundation 0.10.1",
- "core-graphics 0.24.0",
- "enigo",
- "foreign-types-shared 0.3.1",
- "raw-window-handle",
- "rdev",
- "rusqlite",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-autostart",
- "tauri-plugin-dialog",
- "tauri-plugin-global-shortcut",
- "tauri-plugin-single-instance",
- "uuid",
- "windows-sys 0.59.0",
- "x11rb",
-]
 
 [[package]]
 name = "signal-hook-registry"
