@@ -150,7 +150,8 @@ try:
     # ---- 3. The "other app" and a hidden (tray) launch, as after login.
     spawn(["python3.12" if shutil.which("python3.12") else "python3", os.path.join(HERE, "target_app.py"), target_dir])
     assert wait_for(lambda: sh("xdotool", "search", "--name", "^E2E Target$", check=False), 10), "target window missing"
-    app = spawn([BINARY, "--minimized"], stdout=open(os.path.join(work, "app2.log"), "w"))
+    wrap = ["gdb", "-q", "-batch", "-ex", "run", "-ex", "thread apply all bt 25", "--args"] if os.environ.get("E2E_GDB") else []
+    app = spawn(wrap + [BINARY, "--minimized"], stdout=open(os.path.join(work, "app2.log"), "w"))
     time.sleep(4)
     check("relaunch in background", app.poll() is None, f"exit={app.poll()}")
     check("no window shown when onboarded + --minimized", not sh("xdotool", "search", "--onlyvisible", "--name", "^Clazy$", check=False))
@@ -236,7 +237,7 @@ try:
         remembered = c.execute("SELECT value FROM variable_values WHERE name = 'name'").fetchone()
     check("usage counters updated", counts.get("Hello prompt") == 3 and counts.get("Greeting") == 1, str(counts))
     check("fill-in value remembered", remembered and remembered[0] == "Ada", str(remembered))
-    check("app still running at the end", app.poll() is None)
+    check("app still running at the end", app.poll() is None, f"exit={app.poll()}")
 
 finally:
     for p in reversed(procs):

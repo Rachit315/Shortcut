@@ -102,8 +102,25 @@ fn migrate_from_shortcut(dir: &std::path::Path) {
     }
 }
 
+/// Xlib is used from several threads on Linux (GTK/WebKit, the global-hotkey thread, the
+/// keyboard listener). Without `XInitThreads()` before any other Xlib call, concurrent use
+/// can abort the process with "xcb_xlib_threads_sequence_lost" (seen when opening the palette).
+#[cfg(target_os = "linux")]
+fn init_x11_threads() {
+    #[link(name = "X11")]
+    extern "C" {
+        fn XInitThreads() -> std::os::raw::c_int;
+    }
+    // SAFETY: called once at startup, before any other thread or Xlib use.
+    unsafe {
+        XInitThreads();
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    #[cfg(target_os = "linux")]
+    init_x11_threads();
     let start_hidden =
         std::env::args().any(|a| a == "--minimized") || std::env::var_os("CLAZY_START_HIDDEN").is_some();
 
