@@ -9,12 +9,14 @@ const UA = {
   linux: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140 Safari/537.36",
 };
 
-async function open(page: Page) {
+async function open(page: Page, release: "exists" | "none" = "exists") {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   // Keep tests hermetic: no real network.
   await page.route("https://fonts.googleapis.com/**", (r) => r.fulfill({ body: "", contentType: "text/css" }));
-  await page.route("https://api.github.com/**", (r) => r.fulfill({ json: { tag_name: "v0.1.0", assets: [] } }));
+  await page.route("https://api.github.com/**", (r) =>
+    release === "exists" ? r.fulfill({ json: { tag_name: "v0.1.0", assets: [] } }) : r.fulfill({ status: 404, json: { message: "Not Found" } }),
+  );
   await page.goto(SITE);
   return errors;
 }
@@ -61,6 +63,15 @@ test.describe("landing page", () => {
     await expect(page.locator('[data-asset="msi"]')).toHaveAttribute("href", "/download/windows-msi");
     await expect(page.locator('[data-asset="deb"]')).toHaveAttribute("href", "/download/linux-deb");
     await expect(page.locator('[data-asset="appimage"]')).toHaveAttribute("href", "/download/linux-appimage");
+  });
+
+  test("before the first release, downloads show a clear notice instead of dead links", async ({ page }) => {
+    const errors = await open(page, "none");
+    await expect(page.locator("[data-release-notice]")).toBeVisible();
+    await expect(page.locator('[data-asset="dmg"]')).toHaveText("Installer coming soon");
+    await expect(page.locator('[data-asset="dmg"]')).toHaveAttribute("href", "https://github.com/Rachit315/Shortcut/releases");
+    await expect(page.locator("a[data-primary-download]").first()).toHaveAttribute("href", "#download");
+    expect(errors).toEqual([]);
   });
 
   test("hero, sections, feature rows and FAQ work", async ({ page }) => {

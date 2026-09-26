@@ -276,20 +276,37 @@ function setup() {
 }
 setup();
 
-// Show the current version (best effort — the download links work without it).
-async function showVersion() {
+// Before the first release exists, /download/* would 404 on GitHub. Show an honest
+// "coming soon" state instead of dead links.
+function markNoRelease() {
+  document.documentElement.dataset.release = "none";
+  const notice = document.querySelector("[data-release-notice]");
+  if (notice) notice.hidden = false;
+  document.querySelectorAll("[data-asset]").forEach((a) => {
+    a.setAttribute("href", `${REPO_URL}/releases`);
+    a.setAttribute("aria-disabled", "true");
+    if (a.classList.contains("pill")) a.textContent = "Installer coming soon";
+  });
+  document.querySelectorAll("a[data-primary-download]").forEach((a) => a.setAttribute("href", "#download"));
+  const v = document.querySelector("[data-version]");
+  if (v) v.textContent = "FIRST RELEASE IN PROGRESS";
+}
+
+// Show the current version and detect whether a release exists yet (best effort: if the
+// API is unreachable or rate-limited the download links are left as they are).
+async function checkRelease() {
   const el = document.querySelector("[data-version]");
-  if (!el) return;
   try {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 5000);
     const res = await fetch(`https://api.github.com/repos/${cfg.repo}/releases/latest`, { signal: ctrl.signal, headers: { Accept: "application/vnd.github+json" } });
     clearTimeout(timer);
+    if (res.status === 404) return markNoRelease();
     if (!res.ok) return;
     const release = await res.json();
-    if (release.tag_name) el.textContent = `LATEST ${release.tag_name.toUpperCase()}`;
+    if (el && release.tag_name) el.textContent = `LATEST ${release.tag_name.toUpperCase()}`;
   } catch {
-    /* offline or rate-limited: keep "LATEST" */
+    /* offline or rate-limited: keep the links */
   }
 }
-void showVersion();
+void checkRelease();
